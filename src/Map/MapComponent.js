@@ -6,7 +6,16 @@ import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import * as olProj from 'ol/proj';
 import './Map.css'; 
-
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
+import FeatureCollection from '../GisData/jerusalem.geojson';
+import Style from 'ol/style/Style';
+import Icon from 'ol/style/Icon';
+import Circle from 'ol/style/Circle';
+import Fill from 'ol/style/Fill';
+import Stroke from 'ol/style/Stroke';
+import shelterSymbol from '../assets/shelterSymbol.svg';
 
 const MapComponent = () => {
   useEffect(() => {
@@ -24,7 +33,30 @@ const MapComponent = () => {
       }),
     });
 
-    // Clean up function
+    const styleFunction = (feature) => {
+      return new Style({
+        image: new Circle({
+          radius: 6, // Adjust the size of the dot as needed
+          fill: new Fill({
+            color: 'red', // Set the fill color to red
+          }),
+          stroke: new Stroke({
+            color: 'black', // Set the stroke color
+            width: 2, // Set the stroke width
+          }),
+        }),
+      });
+    };
+
+    const geoJsonLayer = new VectorLayer({
+        source: new VectorSource({
+          url: FeatureCollection, // Or use local file
+          format: new GeoJSON(),
+        }),
+        style :styleFunction,
+      });
+      map.addLayer(geoJsonLayer);
+
     return () => {
       map.dispose();
     };
