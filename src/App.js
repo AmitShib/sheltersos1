@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import MapComponent from './Map/MapComponent';
+import ShelterList from './UI/ShelterList';
 
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <MapComponent/>
+        <ShelterList/>
       </header>
     </div>
   );

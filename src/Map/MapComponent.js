@@ -9,13 +9,11 @@ import './Map.css';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
-import FeatureCollection from '../GisData/jerusalem.geojson';
+import jerusShelters from '../GisData/jerusalem.geojson';
 import Style from 'ol/style/Style';
-import Icon from 'ol/style/Icon';
 import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
-import shelterSymbol from '../assets/shelterSymbol.svg';
 
 const MapComponent = () => {
   useEffect(() => {
@@ -50,7 +48,7 @@ const MapComponent = () => {
 
     const geoJsonLayer = new VectorLayer({
         source: new VectorSource({
-          url: FeatureCollection, // Or use local file
+          url: jerusShelters, // Or use local file
           format: new GeoJSON(),
         }),
         style :styleFunction,
