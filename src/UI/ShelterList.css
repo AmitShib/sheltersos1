@@ -1,0 +1,19 @@
+/* ShelterList.css */
+.shelter-list-container {
+    position: absolute;
+    right: 20px;
+    width: calc(30% - 20px);
+    height: 100%;
+    overflow-y: auto;
+    background-color: #f0f0f0;
+}
+
+.shelter-item {
+    background-color: orange;
+    color: black;
+    padding: 10px;
+    margin: 5px 0;
+    margin-right: 10px;
+    list-style-type: none;
+    text-align: left;
+}
