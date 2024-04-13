@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect ,useRef } from 'react';
 import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -15,11 +15,14 @@ import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 
-const MapComponent = () => {
+const MapComponent = ({ mapRef }) => {
+
+  const mapContainer = useRef(null);
+
   useEffect(() => {
     // Initialize map and layers
     const map = new Map({
-      target: 'map',
+      target: mapContainer.current,
       layers: [
         new TileLayer({
           source: new OSM(),
@@ -55,13 +58,15 @@ const MapComponent = () => {
       });
       map.addLayer(geoJsonLayer);
 
+      mapRef.current = map;
+
     return () => {
       map.dispose();
     };
   }, []);
 
   return (
-    <div id="map"></div>
+    <div id="map" ref={mapContainer}></div>
   );
 };
 

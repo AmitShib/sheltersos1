@@ -5,7 +5,7 @@ import './ShelterList.css';
 
 
 
-const ShelterList = () => {
+const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
 
     useEffect(() => {
@@ -24,14 +24,6 @@ const ShelterList = () => {
 
     const targetPoint = [35.2134, 31.7683];
 
-    // Calculate distance between two points
-    //   const calculateDistance = (point1, point2) => {
-    //     const [x1, y1] = point1;
-    //     const [x2, y2] = point2;
-    //     return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-    //   };
-
-
     const calculateDistance = (point1, point2) => {
         const [lon1, lat1] = point1;
         const [lon2, lat2] = point2;
@@ -47,6 +39,18 @@ const ShelterList = () => {
 
         return distance;
     };
+
+
+    const zoomToShelter = (shelter) => {
+        const map = mapRef.current;
+        if (map ) {
+          map.getView().animate({
+            center: shelter.coordinates,
+            zoom: 15,
+            duration: 1000,
+          });
+        }
+      };
 
     // Process and sort shelters when featureCollection is available
     const sortedShelters = featureCollection
@@ -66,7 +70,7 @@ const ShelterList = () => {
                         <span className="name"> Shelter Number: {shelter.shelterNumber}</span><br />
                         <span className="distance">{shelter.distance.toFixed(2)} meters away</span><br />
                         <div className="button-container">
-                            <button className="red-ellipse-button">Navigation</button>
+                            <button className="red-ellipse-button" onClick={() => zoomToShelter(shelter)}>Navigation</button>
                             <button className="red-ellipse-button">Report</button>
                         </div>
                     </li>
