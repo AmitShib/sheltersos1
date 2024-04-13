@@ -9,6 +9,7 @@
 }
 
 .shelter-item {
+    position: relative;
     background-color: orange;
     color: black;
     padding: 10px;
@@ -17,3 +18,29 @@
     list-style-type: none;
     text-align: left;
 }
+
+.name{
+    font-size: 24px; 
+}
+
+.distance {
+    font-size: 14px; 
+  }
+  
+  .button-container {
+    position: absolute; /* Position the button container absolutely */
+    bottom: 5px; /* Adjust bottom positioning */
+    right: 10px; /* Adjust right positioning */
+  }
+  
+  .red-ellipse-button {
+    background-color: red; /* Set the background color of the buttons to red */
+    color: white; /* Set the text color to white for better contrast */
+    border: none; /* Remove the border */
+    border-radius: 20px; /* Make the buttons ellipse */
+    width: 80px; /* Set the width of the buttons */
+    height: 40px; /* Set the height of the buttons */
+    font-size: 12px; /* Adjust font size */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    margin-left: 5px; /* Add margin between buttons */
+  }
