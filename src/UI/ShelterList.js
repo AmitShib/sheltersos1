@@ -1,13 +1,8 @@
 // ShelterList.js
+import { fromLonLat } from 'ol/proj';
 import React, { useEffect, useState } from 'react';
 import jerusShelters from '../GisData/jerusalem.geojson';
 import './ShelterList.css';
-import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
-import { fromLonLat } from 'ol/proj';
-import { Vector as VectorLayer } from 'ol/layer';
-import { Vector as VectorSource } from 'ol/source';
-import { Style, Icon } from 'ol/style';
 
 
 
@@ -47,18 +42,6 @@ const ShelterList = ({ mapRef }) => {
         return distance;
     };
 
-    const pointerSource = new VectorSource();
-    const pointerLayer = new VectorLayer({
-      source: pointerSource,
-      style: new Style({
-        image: new Icon({
-          src: 'https://cdn.mapmarker.io/api/v1/p/rounded.png',
-          scale: 0.5,
-        }),
-      }),
-    });
-  
-
     const zoomToShelter = (shelter) => {
         const map = mapRef.current;
         console.log("coordinates",shelter.coordinates)
@@ -69,14 +52,6 @@ const ShelterList = ({ mapRef }) => {
             zoom: 15,
             duration: 1000,
           });
-          pointerSource.clear();
-
-          // Add new pointer
-          const pointerFeature = new Feature({
-            geometry: new Point(coordinates),
-          });
-          pointerSource.addFeature(pointerFeature);
-    
         }
       };
 
