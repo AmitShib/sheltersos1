@@ -7,7 +7,7 @@ import './ShelterList.css';
 
 
 
-const ShelterList = ({ mapRef }) => {
+const ShelterList = ({ mapRef}) => {
     const [featureCollection, setFeatureCollection] = useState(null);
 
     useEffect(() => {
@@ -44,14 +44,8 @@ const ShelterList = ({ mapRef }) => {
 
     const zoomToShelter = (shelter) => {
         const map = mapRef.current;
-        console.log("coordinates",shelter.coordinates)
-        const coordinates = fromLonLat(shelter.coordinates);
-        if (map ) {
-          map.getView().animate({
-            center: coordinates,
-            zoom: 15,
-            duration: 1000,
-          });
+        if (map) {
+          map.zoomToShelter(shelter);
         }
       };
 

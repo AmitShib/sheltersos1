@@ -1,4 +1,4 @@
-import React, { useEffect ,useRef } from 'react';
+import React, { useEffect ,useRef , useState} from 'react';
 import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -15,9 +15,46 @@ import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 
+import Feature from 'ol/Feature';
+import LineString from 'ol/geom/LineString';
+import { fromLonLat } from 'ol/proj';
+import { getLength } from 'ol/sphere';
+
+const drawNavigationPath = (mapRef, navigationPath, setNavigationPath, start, end) => {
+  const startCoords = fromLonLat(start);
+  const endCoords = fromLonLat(end);
+  const lineString = new LineString([startCoords, endCoords]);
+  const pathFeature = new Feature({
+    geometry: lineString,
+  });
+
+  const vectorSource = new VectorSource({
+    features: [pathFeature],
+  });
+
+  const vectorLayer = new VectorLayer({
+    source: vectorSource,
+    style: new Style({
+      stroke: new Stroke({
+        color: 'blue',
+        width: 3,
+      }),
+    }),
+  });
+
+  if (navigationPath) {
+    mapRef.current.removeLayer(navigationPath);
+  }
+  mapRef.current.addLayer(vectorLayer);
+  setNavigationPath(vectorLayer);
+};
+
+
 const MapComponent = ({ mapRef }) => {
 
   const mapContainer = useRef(null);
+
+  const [navigationPath, setNavigationPath] = useState(null);
 
   useEffect(() => {
     // Initialize map and layers
@@ -60,14 +97,34 @@ const MapComponent = ({ mapRef }) => {
 
       mapRef.current = map;
 
+      const zoomToShelter = (shelter) => {
+        const map = mapRef.current;
+        const coordinates = fromLonLat(shelter.coordinates);
+        const targetPoint = fromLonLat([35.2134, 31.7683]);
+        if (map) {
+          map.getView().animate({
+            center: coordinates,
+            zoom: 15,
+            duration: 1000,
+          });
+          drawNavigationPath(mapRef, navigationPath, setNavigationPath, [35.2134, 31.7683], shelter.coordinates);
+        }
+      };
+
+      mapRef.current.zoomToShelter = zoomToShelter;
+
+
     return () => {
       map.dispose();
     };
   }, []);
 
+   
   return (
     <div id="map" ref={mapContainer}></div>
   );
 };
+// export const drawNavigationPath = drawNavigationPath;
 
 export default MapComponent;
+export { drawNavigationPath };

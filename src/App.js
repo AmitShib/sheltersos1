@@ -1,7 +1,8 @@
 import './App.css';
-import MapComponent from './Map/MapComponent';
+// import MapComponent from './Map/MapComponent';
 import ShelterList from './UI/ShelterList';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import MapComponent, { drawNavigationPath } from './Map/MapComponent';
 
 
 
