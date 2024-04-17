@@ -14,6 +14,8 @@ import Style from 'ol/style/Style';
 import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
+import Point from 'ol/geom/Point'; // Import Point from OpenLayers
+
 
 import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
@@ -95,6 +97,44 @@ const MapComponent = ({ mapRef }) => {
       });
       map.addLayer(geoJsonLayer);
 
+
+      const pointerSource = new VectorSource();
+      const pointerLayer = new VectorLayer({
+        source: pointerSource,
+      });
+      map.addLayer(pointerLayer);
+  
+      // Function to add pointer symbol
+      const addPointer = (coordinates) => {
+        pointerSource.clear(); // Clear previous pointer
+        const pointerFeature = new Feature({
+          geometry: new Point(coordinates),
+          style: new Style({
+            image: new Circle({
+              radius: 12,
+              fill: new Fill({ color: 'blue' }),
+              stroke: new Stroke({ color: 'white', width: 4 }),
+            }),
+          }),
+        });
+        pointerSource.addFeature(pointerFeature);
+      };
+
+      // const coordinates = olProj.fromLonLat([35.2134, 31.7683])
+
+      // addPointer(coordinates);
+
+  
+      // Get current location
+      /*   NEED TO ENABLE LOCATION AT THE BROWSER   */
+      navigator.geolocation.getCurrentPosition((position) => {
+        const lonLat = [position.coords.longitude, position.coords.latitude];
+        const coordinates = fromLonLat(lonLat);
+        addPointer(coordinates);
+      });
+  
+  
+
       mapRef.current = map;
 
       const zoomToShelter = (shelter) => {
@@ -104,7 +144,7 @@ const MapComponent = ({ mapRef }) => {
         if (map) {
           map.getView().animate({
             center: coordinates,
-            zoom: 15,
+            zoom: 18,
             duration: 1000,
           });
           drawNavigationPath(mapRef, navigationPath, setNavigationPath, [35.2134, 31.7683], shelter.coordinates);
