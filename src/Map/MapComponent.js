@@ -23,9 +23,9 @@ import { fromLonLat } from 'ol/proj';
 import { getLength } from 'ol/sphere';
 
 const drawNavigationPath = (mapRef, navigationPath, setNavigationPath, start, end) => {
-  const startCoords = fromLonLat(start);
-  const endCoords = fromLonLat(end);
-  const lineString = new LineString([startCoords, endCoords]);
+  // const startCoords = fromLonLat(start);
+  // const endCoords = fromLonLat(end);
+  const lineString = new LineString([start, end]);
   const pathFeature = new Feature({
     geometry: lineString,
   });
@@ -159,7 +159,7 @@ const MapComponent =  ({ mapRef }) => {
           zoom: 18,
           duration: 1000,
         });
-        drawNavigationPath(mapRef, navigationPath, setNavigationPath, [35.2134, 31.7683], shelter.coordinates);
+        drawNavigationPath(mapRef, navigationPath, setNavigationPath, initLocation, fromLonLat(shelter.coordinates));
       }
     };
 
