@@ -3,11 +3,12 @@ import { fromLonLat } from 'ol/proj';
 import React, { useEffect, useState } from 'react';
 import jerusShelters from '../GisData/jerusalem.geojson';
 import './ShelterList.css';
+import MapComponent, { initLocation } from '../Map/MapComponent';
 
 
 
 
-const ShelterList = ({ mapRef}) => {
+const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
 
     useEffect(() => {
@@ -45,16 +46,16 @@ const ShelterList = ({ mapRef}) => {
     const zoomToShelter = (shelter) => {
         const map = mapRef.current;
         if (map) {
-          map.zoomToShelter(shelter);
+            map.zoomToShelter(shelter);
         }
-      };
+    };
 
     // Process and sort shelters when featureCollection is available
     const sortedShelters = featureCollection
         ? featureCollection.features.map((feature, index) => ({
             shelterNumber: index + 1,
             coordinates: feature.geometry.coordinates,
-            distance: calculateDistance(feature.geometry.coordinates, targetPoint),
+            distance: calculateDistance(feature.geometry.coordinates, initLocation),
         })).sort((a, b) => a.distance - b.distance).slice(0, 10)
         : [];
 

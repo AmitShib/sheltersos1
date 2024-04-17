@@ -51,24 +51,33 @@ const drawNavigationPath = (mapRef, navigationPath, setNavigationPath, start, en
   setNavigationPath(vectorLayer);
 };
 
+let currLocation;
+await navigator.geolocation.getCurrentPosition((position) => {
+  const lonLat = [position.coords.longitude, position.coords.latitude];
+  currLocation = fromLonLat(lonLat);
+});
 
-const MapComponent =  ({ mapRef }) => {
+let initLocation = currLocation ? currLocation : olProj.fromLonLat([35.2134, 31.7683]);
+
+
+const MapComponent = ({ mapRef }) => {
 
   const mapContainer = useRef(null);
 
   const [navigationPath, setNavigationPath] = useState(null);
 
-  let currLocation;
-    navigator.geolocation.getCurrentPosition((position) => {
-    const lonLat = [position.coords.longitude, position.coords.latitude];
-    currLocation = fromLonLat(lonLat);
-  });
+  // let currLocation;
+  //   navigator.geolocation.getCurrentPosition((position) => {
+  //   const lonLat = [position.coords.longitude, position.coords.latitude];
+  //   currLocation = fromLonLat(lonLat);
+  // });
 
 
   useEffect(() => {
     // Initialize map and layers
     console.log("currLoc", currLocation);
-    const initLocation = currLocation ? currLocation : olProj.fromLonLat([35.2134, 31.7683]);
+    // const initLocation = currLocation ? currLocation : olProj.fromLonLat([35.2134, 31.7683]);
+    initLocation = currLocation ? currLocation : olProj.fromLonLat([35.2134, 31.7683]);
 
     const map = new Map({
       target: mapContainer.current,
@@ -165,6 +174,8 @@ const MapComponent =  ({ mapRef }) => {
 
     mapRef.current.zoomToShelter = zoomToShelter;
 
+    mapRef.current.initLocation = initLocation;
+
 
     return () => {
       map.dispose();
@@ -180,3 +191,4 @@ const MapComponent =  ({ mapRef }) => {
 
 export default MapComponent;
 export { drawNavigationPath };
+export { initLocation };
