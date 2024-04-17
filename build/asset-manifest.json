@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.77f30d29.css",
-    "main.js": "/static/js/main.51bca101.js",
+    "main.js": "/static/js/main.93b241c6.js",
     "static/js/453.1fb32a50.chunk.js": "/static/js/453.1fb32a50.chunk.js",
     "static/media/jerusalem.geojson": "/static/media/jerusalem.0df675a900be1a7c1f4e.geojson",
     "index.html": "/index.html",
     "main.77f30d29.css.map": "/static/css/main.77f30d29.css.map",
-    "main.51bca101.js.map": "/static/js/main.51bca101.js.map",
+    "main.93b241c6.js.map": "/static/js/main.93b241c6.js.map",
     "453.1fb32a50.chunk.js.map": "/static/js/453.1fb32a50.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.77f30d29.css",
-    "static/js/main.51bca101.js"
+    "static/js/main.93b241c6.js"
   ]
 }
