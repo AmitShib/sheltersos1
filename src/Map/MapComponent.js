@@ -10,6 +10,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
 import jerusShelters from '../GisData/jerusalem.geojson';
+import holonShelters from '../GisData/holon.geojson';
 import Style from 'ol/style/Style';
 import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
@@ -117,6 +118,16 @@ const MapComponent = ({ mapRef }) => {
       style: styleFunction,
     });
     map.addLayer(geoJsonLayer);
+
+    const geoJsonLayer1 = new VectorLayer({
+      source: new VectorSource({
+        url: holonShelters, // Or use local file
+        format: new GeoJSON(),
+      }),
+      style: styleFunction,
+    });
+    map.addLayer(geoJsonLayer1);
+
 
 
     const pointerSource = new VectorSource();
