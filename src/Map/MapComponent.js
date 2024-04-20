@@ -19,6 +19,7 @@ import './Map.css';
 import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
 import { fromLonLat, toLonLat } from 'ol/proj';
+import { apiKey } from '../config';
 
 /*   NEED TO ENABLE LOCATION AT THE BROWSER   */
 const getCurrentLocation = () => {
@@ -165,7 +166,6 @@ const MapComponent = ({ mapRef }) => {
     mapRef.current.zoomToShelter = zoomToShelter;
 
     const drawNavigationPath = async (start, end) => {
-      const apiKey = '5b3ce3597851110001cf6248dcce93c663f14ff7beca4d4b42af8eee';
       const startCoor = toLonLat(start);
       const endCoor = toLonLat(end);
       const apiUrl = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${apiKey}&start=${startCoor[0]},${startCoor[1]}&end=${endCoor[0]},${endCoor[1]}`;
