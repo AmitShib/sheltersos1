@@ -1,100 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
-import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
-import OSM from 'ol/source/OSM';
-import * as olProj from 'ol/proj';
-import './Map.css';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
 import GeoJSON from 'ol/format/GeoJSON';
-import jerusShelters from '../GisData/jerusalem.geojson';
-import holonShelters from '../GisData/holon.geojson';
-import Style from 'ol/style/Style';
+import Point from 'ol/geom/Point'; 
+import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
+import 'ol/ol.css';
+import * as olProj from 'ol/proj';
+import OSM from 'ol/source/OSM';
+import VectorSource from 'ol/source/Vector';
 import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
-import Point from 'ol/geom/Point'; // Import Point from OpenLayers
-
-
+import Style from 'ol/style/Style';
+import React, { useEffect, useRef } from 'react';
+import holonShelters from '../GisData/holon.geojson';
+import jerusShelters from '../GisData/jerusalem.geojson';
+import './Map.css';
 import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
 import { fromLonLat, toLonLat } from 'ol/proj';
-import { getLength } from 'ol/sphere';
 
-
-
-// //GOOD ONE 
-// const drawNavigationPath = async (mapRef, navigationPath, setNavigationPath, start, end) => {
-//   // Construct the URL for the OpenRouteService API
-//   const apiKey = '5b3ce3597851110001cf6248dcce93c663f14ff7beca4d4b42af8eee'; // Replace with your actual API key
-//   const startCoor = toLonLat(start);
-//   const endCoor = toLonLat(end);
-//   const apiUrl = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${apiKey}&start=${startCoor[0]},${startCoor[1]}&end=${endCoor[0]},${endCoor[1]}`;
-
-//   fetch(apiUrl, {
-//     headers: {
-//       'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8'
-//     }
-//   })
-//     .then(response => {
-//       console.log('Status:', response.status);
-//       console.log('Headers:', response.headers);
-//       return response.json();
-//     })
-//     .then(data => {
-//       console.log('Body:', data);
-//       const routeCoordinates = data.features[0].geometry.coordinates;
-
-//       const convertRouteCoordinates = routeCoordinates.map(coord => fromLonLat(coord));
-
-//       console.log("routeCoordinates", routeCoordinates);
-//       console.log("convertRouteCoordinates", convertRouteCoordinates);
-
-//       // Create a LineString geometry from the route coordinates
-//       const lineString = new LineString(convertRouteCoordinates);
-
-//       // Create a feature from the LineString geometry
-//       const pathFeature = new Feature({
-//         geometry: lineString,
-//       });
-
-//       // Create a VectorSource with the path feature
-//       const vectorSource = new VectorSource({
-//         features: [pathFeature],
-//       });
-
-//       // Create a VectorLayer with the VectorSource and style it
-//       const vectorLayer = new VectorLayer({
-//         source: vectorSource,
-//         style: new Style({
-//           stroke: new Stroke({
-//             color: 'blue',
-//             width: 3,
-//           }),
-//         }),
-//       });
-
-//       console.log("navigationPath in draw", navigationPath);
-//       // Remove the previous navigation path layer from the map if it exists
-//       if (navigationPath) {
-//         mapRef.current.removeLayer(navigationPath);
-//       }
-
-//       // // Add the new navigation path layer to the map
-//       mapRef.current.addLayer(vectorLayer);
-
-//       // Update the navigationPath state with the new layer
-//       setNavigationPath(vectorLayer);
-
-
-//     })
-//     .catch(error => {
-//       console.error('Error:', error);
-//     });
-
-// };
 
 /*   NEED TO ENABLE LOCATION AT THE BROWSER   */
 let currLocation;
@@ -110,20 +35,11 @@ const MapComponent = ({ mapRef }) => {
 
   const mapContainer = useRef(null);
 
-  // const [navigationPath, setNavigationPath] = useState(null);
   let navigationPath;
-
-  // let currLocation;
-  //   navigator.geolocation.getCurrentPosition((position) => {
-  //   const lonLat = [position.coords.longitude, position.coords.latitude];
-  //   currLocation = fromLonLat(lonLat);
-  // });
-
 
   useEffect(() => {
     // Initialize map and layers
     console.log("currLoc", currLocation);
-    // const initLocation = currLocation ? currLocation : olProj.fromLonLat([35.2134, 31.7683]);
     initLocation = currLocation ? currLocation : olProj.fromLonLat([35.2134, 31.7683]);
 
     const map = new Map({
@@ -134,9 +50,7 @@ const MapComponent = ({ mapRef }) => {
         }),
       ],
       view: new View({
-        // center: olProj.fromLonLat([35.2134, 31.7683]), // Convert lon/lat to OpenLayers format
-        // center: currLocation ? currLocation : olProj.fromLonLat([35.2134, 31.7683]), // Convert lon/lat to OpenLayers format
-        center: initLocation, // Convert lon/lat to OpenLayers format
+        center: initLocation,
         zoom: 13,
       }),
     });
@@ -158,7 +72,7 @@ const MapComponent = ({ mapRef }) => {
 
     const geoJsonLayer = new VectorLayer({
       source: new VectorSource({
-        url: jerusShelters, // Or use local file
+        url: jerusShelters, 
         format: new GeoJSON(),
       }),
       style: styleFunction,
@@ -167,7 +81,7 @@ const MapComponent = ({ mapRef }) => {
 
     const geoJsonLayer1 = new VectorLayer({
       source: new VectorSource({
-        url: holonShelters, // Or use local file
+        url: holonShelters, 
         format: new GeoJSON(),
       }),
       style: styleFunction,
@@ -184,7 +98,7 @@ const MapComponent = ({ mapRef }) => {
 
     // Function to add pointer symbol
     const addPointer = (coordinates) => {
-      pointerSource.clear(); // Clear previous pointer
+      pointerSource.clear(); 
       const pointerFeature = new Feature({
         geometry: new Point(coordinates),
         style: new Style({
@@ -197,8 +111,6 @@ const MapComponent = ({ mapRef }) => {
       });
       pointerSource.addFeature(pointerFeature);
     };
-
-    // const coordinates = olProj.fromLonLat([35.2134, 31.7683])
 
     addPointer(initLocation);
 
@@ -226,8 +138,7 @@ const MapComponent = ({ mapRef }) => {
     mapRef.current.zoomToShelter = zoomToShelter;
 
     const drawNavigationPath = async (start, end) => {
-      // Construct the URL for the OpenRouteService API
-      const apiKey = '5b3ce3597851110001cf6248dcce93c663f14ff7beca4d4b42af8eee'; // Replace with your actual API key
+      const apiKey = '5b3ce3597851110001cf6248dcce93c663f14ff7beca4d4b42af8eee';
       const startCoor = toLonLat(start);
       const endCoor = toLonLat(end);
       const apiUrl = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${apiKey}&start=${startCoor[0]},${startCoor[1]}&end=${endCoor[0]},${endCoor[1]}`;
@@ -251,27 +162,22 @@ const MapComponent = ({ mapRef }) => {
           console.log("routeCoordinates", routeCoordinates);
           console.log("convertRouteCoordinates", convertRouteCoordinates);
 
-          // Create a LineString geometry from the route coordinates
           const lineString = new LineString(convertRouteCoordinates);
 
-          // Create a feature from the LineString geometry
           const pathFeature = new Feature({
             geometry: lineString,
           });
 
-          // Create a VectorSource with the path feature
           const vectorSource = new VectorSource({
             features: [pathFeature],
           });
 
-          // Remove the previous navigation path layer from the map if it exists
           if (navigationPath) {
             mapRef.current.removeLayer(navigationPath);
           }
 
           navigationPath = null;
 
-          // Create a VectorLayer with the VectorSource and style it
           navigationPath = new VectorLayer({
             source: vectorSource,
             style: new Style({
@@ -285,12 +191,7 @@ const MapComponent = ({ mapRef }) => {
           console.log("navigationPath in draw", navigationPath);
           
 
-          // // Add the new navigation path layer to the map
           mapRef.current.addLayer(navigationPath);
-
-          // Update the navigationPath state with the new layer
-          // setNavigationPath(vectorLayer);
-
 
         })
         .catch(error => {
@@ -298,41 +199,6 @@ const MapComponent = ({ mapRef }) => {
         });
 
     };
-
-
-    // const drawNavigationPath = (start, end) => {
-    //   // const startCoords = fromLonLat(start);
-    //   // const endCoords = fromLonLat(end);
-    //   console.log("drawNav navPath", navigationPath);
-    //   const lineString = new LineString([start, end]);
-    //   const pathFeature = new Feature({
-    //     geometry: lineString,
-    //   });
-
-    //   const vectorSource = new VectorSource({
-    //     features: [pathFeature],
-    //   });
-
-    //   if (navigationPath) {
-    //     mapRef.current.removeLayer(navigationPath);
-    //   }
-
-    //   navigationPath = null;
-
-    //   navigationPath = new VectorLayer({
-    //     source: vectorSource,
-    //     style: new Style({
-    //       stroke: new Stroke({
-    //         color: 'blue',
-    //         width: 3,
-    //       }),
-    //     }),
-    //   });
-
-    //   mapRef.current.addLayer(navigationPath);
-    //   // setNavigationPath(vectorLayer);
-    // };
-
 
     mapRef.current.initLocation = initLocation;
 
@@ -347,8 +213,7 @@ const MapComponent = ({ mapRef }) => {
     <div id="map" ref={mapContainer}></div>
   );
 };
-// export const drawNavigationPath = drawNavigationPath;
 
 export default MapComponent;
-// export { drawNavigationPath };
 export { initLocation };
+

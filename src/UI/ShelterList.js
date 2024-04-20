@@ -1,15 +1,9 @@
-// ShelterList.js
-import { fromLonLat } from 'ol/proj';
+import { toLonLat } from 'ol/proj';
 import React, { useEffect, useState } from 'react';
-import jerusShelters from '../GisData/jerusalem.geojson';
 import holonShelters from '../GisData/holon.geojson';
+import jerusShelters from '../GisData/jerusalem.geojson';
+import { initLocation } from '../Map/MapComponent';
 import './ShelterList.css';
-import MapComponent, { initLocation } from '../Map/MapComponent';
-import {  toLonLat } from 'ol/proj';
-
-
-
-
 
 const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
@@ -24,7 +18,6 @@ const ShelterList = ({ mapRef }) => {
                 const dataJerusalem = await responseJerusalem.json();
                 const dataHolon = await responseHolon.json();
 
-                // Combine features from both GeoJSON files
                 const combinedFeatures = [...dataJerusalem.features, ...dataHolon.features];
 
                 setFeatureCollection({ features: combinedFeatures });
@@ -36,7 +29,6 @@ const ShelterList = ({ mapRef }) => {
         fetchGeoJSON();
     }, []);
 
-    // const targetPoint = [35.2134, 31.7683];
     const targetPoint = toLonLat(initLocation);
 
     const calculateDistance = (point1, point2) => {
