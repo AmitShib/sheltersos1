@@ -65,7 +65,7 @@ const MapComponent = ({ mapRef }) => {
       ],
       view: new View({
         center: initLocation,
-        zoom: 13,
+        zoom: 15,
       }),
     });
 
@@ -90,6 +90,7 @@ const MapComponent = ({ mapRef }) => {
         format: new GeoJSON(),
       }),
       style: styleFunction,
+      minZoom: 13,
     });
     map.addLayer(geoJsonLayer);
 
@@ -99,6 +100,7 @@ const MapComponent = ({ mapRef }) => {
         format: new GeoJSON(),
       }),
       style: styleFunction,
+      minZoom: 13,
     });
     map.addLayer(geoJsonLayer1);
 
@@ -117,9 +119,9 @@ const MapComponent = ({ mapRef }) => {
         geometry: new Point(coordinates),
         style: new Style({
           image: new Circle({
-            radius: 12,
+            radius: 20,
             fill: new Fill({ color: 'blue' }),
-            stroke: new Stroke({ color: 'white', width: 4 }),
+            stroke: new Stroke({ color: 'white', width: 2 }),
           }),
         }),
       });
