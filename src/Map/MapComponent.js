@@ -1,7 +1,7 @@
 import Map from 'ol/Map';
 import View from 'ol/View';
 import GeoJSON from 'ol/format/GeoJSON';
-import Point from 'ol/geom/Point'; 
+import Point from 'ol/geom/Point';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import 'ol/ol.css';
@@ -20,15 +20,30 @@ import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
 import { fromLonLat, toLonLat } from 'ol/proj';
 
-
 /*   NEED TO ENABLE LOCATION AT THE BROWSER   */
-let currLocation;
-await navigator.geolocation.getCurrentPosition((position) => {
-  const lonLat = [position.coords.longitude, position.coords.latitude];
-  currLocation = fromLonLat(lonLat);
-});
+const getCurrentLocation = () => {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('Geolocation is not supported by your browser'));
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          resolve([longitude, latitude]);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    }
+  });
+};
 
-let initLocation = currLocation ? currLocation : olProj.fromLonLat([35.2134, 31.7683]);
+const currLocation = await getCurrentLocation();
+
+const olCurrLoc = fromLonLat(currLocation);
+
+let initLocation = currLocation ? olCurrLoc : fromLonLat([35.2134, 31.7683]);
 
 
 const MapComponent = ({ mapRef }) => {
@@ -40,8 +55,6 @@ const MapComponent = ({ mapRef }) => {
   useEffect(() => {
     // Initialize map and layers
     console.log("currLoc", currLocation);
-    initLocation = currLocation ? currLocation : olProj.fromLonLat([35.2134, 31.7683]);
-
     const map = new Map({
       target: mapContainer.current,
       layers: [
@@ -72,7 +85,7 @@ const MapComponent = ({ mapRef }) => {
 
     const geoJsonLayer = new VectorLayer({
       source: new VectorSource({
-        url: jerusShelters, 
+        url: jerusShelters,
         format: new GeoJSON(),
       }),
       style: styleFunction,
@@ -81,7 +94,7 @@ const MapComponent = ({ mapRef }) => {
 
     const geoJsonLayer1 = new VectorLayer({
       source: new VectorSource({
-        url: holonShelters, 
+        url: holonShelters,
         format: new GeoJSON(),
       }),
       style: styleFunction,
@@ -98,7 +111,7 @@ const MapComponent = ({ mapRef }) => {
 
     // Function to add pointer symbol
     const addPointer = (coordinates) => {
-      pointerSource.clear(); 
+      pointerSource.clear();
       const pointerFeature = new Feature({
         geometry: new Point(coordinates),
         style: new Style({
@@ -123,7 +136,6 @@ const MapComponent = ({ mapRef }) => {
     const zoomToShelter = (shelter) => {
       const map = mapRef.current;
       const coordinates = fromLonLat(shelter.coordinates);
-      const targetPoint = fromLonLat([35.2134, 31.7683]);
       if (map) {
         map.getView().animate({
           center: coordinates,
@@ -132,6 +144,21 @@ const MapComponent = ({ mapRef }) => {
         });
         console.log("navigationPath in zoom", navigationPath);
         drawNavigationPath(initLocation, fromLonLat(shelter.coordinates));
+
+        const intervalId = setInterval(async () => {
+          try {
+            const newCurrentLocation = await getCurrentLocation();
+            const olNewCurrLoc = fromLonLat(newCurrentLocation);
+            console.log("newCurrLoc", newCurrentLocation);
+            console.log("olnewCurrLoc", olNewCurrLoc);
+            addPointer(olNewCurrLoc);
+          } catch (error) {
+            console.error('Error getting current location:', error);
+          }
+        }, 10000); // Update every 10 seconds
+        // Clean up interval on component unmount
+        return () => clearInterval(intervalId);
+
       }
     };
 
@@ -189,7 +216,7 @@ const MapComponent = ({ mapRef }) => {
           });
 
           console.log("navigationPath in draw", navigationPath);
-          
+
 
           mapRef.current.addLayer(navigationPath);
 
