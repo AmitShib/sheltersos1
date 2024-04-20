@@ -2,8 +2,11 @@
 import { fromLonLat } from 'ol/proj';
 import React, { useEffect, useState } from 'react';
 import jerusShelters from '../GisData/jerusalem.geojson';
+import holonShelters from '../GisData/holon.geojson';
 import './ShelterList.css';
 import MapComponent, { initLocation } from '../Map/MapComponent';
+import {  toLonLat } from 'ol/proj';
+
 
 
 
@@ -11,12 +14,20 @@ import MapComponent, { initLocation } from '../Map/MapComponent';
 const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
 
+    console.log("initLoc at ShelterList", initLocation);
+
     useEffect(() => {
         const fetchGeoJSON = async () => {
             try {
-                const response = await fetch(jerusShelters);
-                const data = await response.json();
-                setFeatureCollection(data);
+                const responseJerusalem = await fetch(jerusShelters);
+                const responseHolon = await fetch(holonShelters);
+                const dataJerusalem = await responseJerusalem.json();
+                const dataHolon = await responseHolon.json();
+
+                // Combine features from both GeoJSON files
+                const combinedFeatures = [...dataJerusalem.features, ...dataHolon.features];
+
+                setFeatureCollection({ features: combinedFeatures });
             } catch (error) {
                 console.error('Error fetching GeoJSON data:', error);
             }
@@ -25,7 +36,8 @@ const ShelterList = ({ mapRef }) => {
         fetchGeoJSON();
     }, []);
 
-    const targetPoint = [35.2134, 31.7683];
+    // const targetPoint = [35.2134, 31.7683];
+    const targetPoint = toLonLat(initLocation);
 
     const calculateDistance = (point1, point2) => {
         const [lon1, lat1] = point1;
@@ -55,7 +67,7 @@ const ShelterList = ({ mapRef }) => {
         ? featureCollection.features.map((feature, index) => ({
             shelterNumber: index + 1,
             coordinates: feature.geometry.coordinates,
-            distance: calculateDistance(feature.geometry.coordinates, initLocation),
+            distance: calculateDistance(feature.geometry.coordinates, targetPoint),
         })).sort((a, b) => a.distance - b.distance).slice(0, 10)
         : [];
 
