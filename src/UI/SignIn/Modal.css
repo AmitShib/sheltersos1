@@ -12,9 +12,10 @@
   }
   
   .modal {
-    background-color: #fff; /* White background */
+    background-color: #ffa500; /* Orange background */
     padding: 20px;
     border-radius: 5px;
+    position: relative; /* Position relative for absolute positioning of the close button */
   }
   
   .close-button {
@@ -26,5 +27,9 @@
     cursor: pointer;
     font-size: 20px;
     color: #666;
+  }
+  
+  .close-icon {
+    font-size: 24px;
   }
   
