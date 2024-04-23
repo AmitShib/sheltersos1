@@ -21,8 +21,13 @@ const SignUpForm = () => {
         // You can add your logic for authentication here
     };
 
+    const stopPropagation = (e) => {
+        e.stopPropagation(); // Prevent event propagation
+      };
+    
+
     return (
-        <div className="sign-container">
+        <div className="sign-container" onClick={stopPropagation}>
             <h2>Sign In</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
