@@ -1,0 +1,36 @@
+.sign-container {
+    max-width: 300px;
+    margin: 0 auto;
+    background-color: #ffa500; /* Orange background */
+    padding: 20px;
+    border-radius: 5px;
+    position: relative; /* Position relative for absolute positioning of the close button */
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #666;
+  }
+  
+  .sign-button {
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #ff0000; /* Red background color */
+    color: #fff; /* White text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .sign-button:hover {
+    background-color: #cc0000; /* Darker red on hover */
+  }
+  

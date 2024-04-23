@@ -2,9 +2,12 @@
 import React from 'react';
 import './SignInButton.css'; // Import the CSS file for styling
 
-const SignInButton = ({ onClick }) => {
+const SignInButton = ({ onSignInClick, onSignUpClick }) => {
   return (
-    <button className="sign-in-button" onClick={onClick}>Sign In</button>
+    <div className='sign-button-container'>
+      <button className="sign-button" onClick={onSignInClick}>Sign In</button>
+      <button className="sign-button" onClick={onSignUpClick}>Sign Up</button>
+    </div>
   );
 };
 
