@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './SignUpForm.css'; // Import the CSS file for styling
 
-const SignUpForm = ({ onClose }) => {
+const SignUpForm = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');

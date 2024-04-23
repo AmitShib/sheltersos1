@@ -1,35 +1,45 @@
 /* SignInForm.css */
+
 .signin-form-container {
     max-width: 300px;
     margin: 0 auto;
-  }
-  
-  .form-group {
+    background-color: #ffa500;
+    /* Orange background */
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+    /* Position relative for absolute positioning of the close button */
+}
+
+
+.form-group {
     margin-bottom: 15px;
-  }
-  
-  label {
+}
+
+label {
     display: block;
-  }
-  
-  input[type="text"],
-  input[type="password"] {
+}
+
+input[type="text"],
+input[type="password"] {
     width: 100%;
     padding: 8px;
     font-size: 16px;
-  }
-  
-  button {
+}
+
+button {
     padding: 10px 20px;
-    background-color: #ff3c00; /* Blue background color */
-    color: #fff; /* White text color */
+    background-color: #ff3c00;
+    /* Blue background color */
+    color: #fff;
+    /* White text color */
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-  }
-  
-  button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-  }
-  
+}
+
+button:hover {
+    background-color: #0056b3;
+    /* Darker blue on hover */
+}

@@ -4,9 +4,8 @@ import MapComponent from './Map/MapComponent';
 import ShelterList from './UI/ShelterList';
 import SignInButton from './UI/SignIn/SignInButton';
 import Modal from './UI/SignIn/Modal';
-import SignContainer from './UI/SignIn/SignContainer';
 import SignUpForm from './UI/SignIn/SignUpForm';
-
+import SignInForm from './UI/SignIn/SignInForm';
 
 
 function App() {
@@ -38,12 +37,12 @@ function App() {
         <SignInButton onSignInClick={handleSignInButtonClick} onSignUpClick={handleSignUpButtonClick} /> {/* Pass handlers for sign-in and sign-up buttons */}
         {showSignInModal && (
           <Modal onClose={handleCloseModal}>
-            <SignContainer onClose={handleCloseModal} /> {/* Pass onClose handler to close the modal */}
+            <SignInForm />
           </Modal>
         )}
         {showSignUpModal && (
           <Modal onClose={handleCloseModal}>
-            <SignUpForm onClose={handleCloseModal} /> {/* Pass onClose handler to close the modal */}
+            <SignUpForm /> {/* Pass onClose handler to close the modal */}
           </Modal>
         )}
 
