@@ -1,0 +1,14 @@
+/* SignInButton.css */
+.sign-in-button {
+    position: absolute;
+    top: 10px; 
+    right: 50px; 
+    padding: 10px 20px;
+    background-color: #0e0e0e; 
+    color: #ffffff; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
