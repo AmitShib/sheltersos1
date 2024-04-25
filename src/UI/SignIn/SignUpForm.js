@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios'; // Import axios
 import './SignUpForm.css'; // Import the CSS file for styling
+import { GlobalContext } from '../../GlobalContext';
 
 const SignUpForm = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [permission, setPermission] = useState('false');
+    const [isManager, setIsManager] = useState(false);
+    const { isConnected, isAdmin, setIsConnectedValue, setIsAdminValue } = useContext(GlobalContext);
+
+    console.log("connected:",isConnected);
+    console.log("admin:",isAdmin);
+
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -16,6 +22,11 @@ const SignUpForm = () => {
         setPassword(e.target.value);
     };
 
+    const handleIsManagerChange = (e) => {
+        setIsManager(e.target.value === 'true'); // Update isManager based on the select value
+    };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Submitted:', { username, password });
@@ -24,14 +35,19 @@ const SignUpForm = () => {
             const response = await axios.post('http://localhost:3000/api/users', {
                 userName: username,
                 password: password,
-                isManager: permission === 'option2', // Set isManager based on the selected permission
+                isManager: isManager, // Set isManager based on the selected permission
             });
 
+            setIsConnectedValue(true); // Set isConnected to true
+            setIsAdminValue(isManager); // Set isAdmin based on the selected permission
+
             console.log('User added:', response.data);
+            console.log("connected:",isConnected);
+            console.log("admin:",isAdmin);
             // You can add additional logic here, such as displaying a success message or clearing the form
         } catch (error) {
             console.error('Error adding user:', error);
-            // You can add error handling logic here, such as displaying an error message
+            setIsConnectedValue(false); // Set isConnected to false in case of an error
         }
     };
 
@@ -65,10 +81,10 @@ const SignUpForm = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="permission">isManager:</label>
-                    <select id="permission" required>
-                        <option value="option1">false</option>
-                        <option value="option2">true</option>
+                    <label htmlFor="isManager">isManager:</label>
+                    <select id="isManager" value={isManager ? 'true' : 'false'} onChange={handleIsManagerChange} required>
+                        <option value="false">false</option>
+                        <option value="true">true</option>
                     </select>
                 </div>
                 <button type="submit">Sign Up</button>

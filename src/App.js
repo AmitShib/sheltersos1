@@ -6,6 +6,7 @@ import SignInButton from './UI/SignIn/SignInButton';
 import Modal from './UI/SignIn/Modal';
 import SignUpForm from './UI/SignIn/SignUpForm';
 import SignInForm from './UI/SignIn/SignInForm';
+import { GlobalProvider } from './GlobalContext';
 
 
 function App() {
@@ -30,24 +31,27 @@ function App() {
 
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <MapComponent mapRef={mapRef} />
-        <ShelterList mapRef={mapRef} />
-        <SignInButton onSignInClick={handleSignInButtonClick} onSignUpClick={handleSignUpButtonClick} /> {/* Pass handlers for sign-in and sign-up buttons */}
-        {showSignInModal && (
-          <Modal onClose={handleCloseModal}>
-            <SignInForm />
-          </Modal>
-        )}
-        {showSignUpModal && (
-          <Modal onClose={handleCloseModal}>
-            <SignUpForm /> {/* Pass onClose handler to close the modal */}
-          </Modal>
-        )}
+    <GlobalProvider>
+      <div className="App">
+        <header className="App-header">
+          <MapComponent mapRef={mapRef} />
+          <ShelterList mapRef={mapRef} />
+          <SignInButton onSignInClick={handleSignInButtonClick} onSignUpClick={handleSignUpButtonClick} /> {/* Pass handlers for sign-in and sign-up buttons */}
+          {showSignInModal && (
+            <Modal onClose={handleCloseModal}>
+              <SignInForm />
+            </Modal>
+          )}
+          {showSignUpModal && (
+            <Modal onClose={handleCloseModal}>
+              <SignUpForm /> {/* Pass onClose handler to close the modal */}
+            </Modal>
+          )}
 
-      </header>
-    </div>
+        </header>
+      </div>
+    </GlobalProvider>
+
   );
 }
 
