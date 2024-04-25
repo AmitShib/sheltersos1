@@ -1,10 +1,18 @@
 // SignInForm.js
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './SignInForm.css'; // Import the CSS file for styling
+import { GlobalContext } from '../../GlobalContext';
+import axios from 'axios'; // Import axios
+
 
 const SignInForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { isConnected, isAdmin, setIsConnectedValue, setIsAdminValue } = useContext(GlobalContext);
+
+  console.log("connected:",isConnected);
+  console.log("admin:",isAdmin);
+
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -14,11 +22,36 @@ const SignInForm = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here, such as sending data to a backend server
     console.log('Submitted:', { username, password });
-    // You can add your logic for authentication here
+
+    try {
+      // Send a GET request to check if the user exists
+      const response = await axios.get(`http://localhost:3000/api/users/${username}`);
+      const user = response.data;
+
+      // Check if the user exists and the password matches
+      if (user && user.password === password) {
+        setIsConnectedValue(true); // Set isConnected to true
+        setIsAdminValue(user.isManager); // Set isAdmin based on the user's isManager value
+
+        console.log("connected:",isConnected);
+        console.log("admin:",isAdmin);      
+        console.log('User authenticated:', user);
+
+      } else {
+        console.log('Invalid username or password');
+        setIsConnectedValue(false); // Set isConnected to false
+        setIsAdminValue(false); // Set isAdmin to false
+        // You can add additional logic here, such as displaying an error message
+      }
+    } catch (error) {
+      console.error('Error authenticating user:', error);
+      setIsConnectedValue(false); // Set isConnected to false
+      setIsAdminValue(false); // Set isAdmin to false
+    }
+
   };
 
   const stopPropagation = (e) => {
