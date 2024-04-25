@@ -5,9 +5,10 @@ import { GlobalContext } from '../../GlobalContext';
 import axios from 'axios'; // Import axios
 
 
-const SignInForm = () => {
+const SignInForm = ({onClose}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showModal, setShowModal] = useState(true); // Add a state for modal visibility
   const { isConnected, isAdmin, setIsConnectedValue, setIsAdminValue } = useContext(GlobalContext);
 
   console.log("connected:",isConnected);
@@ -39,6 +40,9 @@ const SignInForm = () => {
         console.log("connected:",isConnected);
         console.log("admin:",isAdmin);      
         console.log('User authenticated:', user);
+
+        setShowModal(false); // Set showModal to false to close the modal
+        onClose();
 
       } else {
         console.log('Invalid username or password');

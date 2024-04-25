@@ -39,12 +39,12 @@ function App() {
           <SignInButton onSignInClick={handleSignInButtonClick} onSignUpClick={handleSignUpButtonClick} /> {/* Pass handlers for sign-in and sign-up buttons */}
           {showSignInModal && (
             <Modal onClose={handleCloseModal}>
-              <SignInForm />
+              <SignInForm onClose={handleCloseModal}/>
             </Modal>
           )}
           {showSignUpModal && (
             <Modal onClose={handleCloseModal}>
-              <SignUpForm /> {/* Pass onClose handler to close the modal */}
+              <SignUpForm onClose={handleCloseModal}/> {/* Pass onClose handler to close the modal */}
             </Modal>
           )}
 

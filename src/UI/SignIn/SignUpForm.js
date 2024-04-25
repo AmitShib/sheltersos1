@@ -3,11 +3,12 @@ import axios from 'axios'; // Import axios
 import './SignUpForm.css'; // Import the CSS file for styling
 import { GlobalContext } from '../../GlobalContext';
 
-const SignUpForm = () => {
+const SignUpForm = ({onClose}) => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isManager, setIsManager] = useState(false);
+    const [showModal, setShowModal] = useState(true); // Add a state for modal visibility
     const { isConnected, isAdmin, setIsConnectedValue, setIsAdminValue } = useContext(GlobalContext);
 
     console.log("connected:",isConnected);
@@ -44,6 +45,9 @@ const SignUpForm = () => {
             console.log('User added:', response.data);
             console.log("connected:",isConnected);
             console.log("admin:",isAdmin);
+
+            setShowModal(false); // Set showModal to false to close the modal
+            onClose();
             // You can add additional logic here, such as displaying a success message or clearing the form
         } catch (error) {
             console.error('Error adding user:', error);
