@@ -1,12 +1,16 @@
 import { toLonLat } from 'ol/proj';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import holonShelters from '../GisData/holon.geojson';
 import jerusShelters from '../GisData/jerusalem.geojson';
 import { initLocation } from '../Map/MapComponent';
 import './ShelterList.css';
+import { GlobalContext } from '../GlobalContext';
+import { toast } from 'react-toastify'; // Import the toast library
 
 const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
+
+    const { isConnected } = useContext(GlobalContext);
 
     console.log("initLoc at ShelterList", initLocation);
 
@@ -54,6 +58,15 @@ const ShelterList = ({ mapRef }) => {
         }
     };
 
+    const handleReportClick = () => {
+        if (!isConnected) {
+            toast.error('Please connect first.'); // Display a toast if not connected
+            return;
+        }
+        // Code to handle report click when connected
+    };
+
+
     // Process and sort shelters when featureCollection is available
     const sortedShelters = featureCollection
         ? featureCollection.features.map((feature, index) => ({
@@ -73,7 +86,7 @@ const ShelterList = ({ mapRef }) => {
                         <span className="distance">{shelter.distance.toFixed(2)} meters away</span><br />
                         <div className="button-container">
                             <button className="red-ellipse-button" onClick={() => zoomToShelter(shelter)}>Navigation</button>
-                            <button className="red-ellipse-button">Report</button>
+                            <button className="red-ellipse-button" onClick={handleReportClick}>Report</button>
                         </div>
                     </li>
                 ))}

@@ -7,6 +7,8 @@ import Modal from './UI/SignIn/Modal';
 import SignUpForm from './UI/SignIn/SignUpForm';
 import SignInForm from './UI/SignIn/SignInForm';
 import { GlobalProvider , GlobalContext} from './GlobalContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -63,6 +65,7 @@ function App() {
                   <SignUpForm onClose={handleCloseModal} />
                 </Modal>
               )}
+              <ToastContainer />
             </header>
           </div>
         )}
