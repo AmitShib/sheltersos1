@@ -144,6 +144,7 @@ const ShelterList = ({ mapRef }) => {
                     shelterNumber={selectedShelter.shelterNumber}
                     onClose={handleCloseReportPopup}
                     onSubmit={handleSubmitReport}
+                    report={selectedShelter.report}
                 />
             )}
 

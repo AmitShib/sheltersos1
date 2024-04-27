@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.0520115b.css",
-    "main.js": "/static/js/main.1e7335c7.js",
+    "main.css": "/static/css/main.1594b7dd.css",
+    "main.js": "/static/js/main.d02852d0.js",
     "static/js/453.2f591e89.chunk.js": "/static/js/453.2f591e89.chunk.js",
     "static/media/holon.geojson": "/static/media/holon.fdaa80776d3028e763b9.geojson",
     "static/media/jerusalem.geojson": "/static/media/jerusalem.0df675a900be1a7c1f4e.geojson",
     "index.html": "/index.html",
-    "main.0520115b.css.map": "/static/css/main.0520115b.css.map",
-    "main.1e7335c7.js.map": "/static/js/main.1e7335c7.js.map",
+    "main.1594b7dd.css.map": "/static/css/main.1594b7dd.css.map",
+    "main.d02852d0.js.map": "/static/js/main.d02852d0.js.map",
     "453.2f591e89.chunk.js.map": "/static/js/453.2f591e89.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0520115b.css",
-    "static/js/main.1e7335c7.js"
+    "static/css/main.1594b7dd.css",
+    "static/js/main.d02852d0.js"
   ]
 }
