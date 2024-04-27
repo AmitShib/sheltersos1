@@ -59,6 +59,18 @@ const ShelterList = ({ mapRef }) => {
         fetchReports();
     }, []);
 
+    const refreshReports = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/api/reports');
+            const parsedReports = response.data.map(report => ({
+                ...report,
+                shelterNum: parseInt(report.shelterNum, 10)
+            }));
+            setReports(parsedReports);
+        } catch (error) {
+            console.error('Error fetching reports:', error);
+        }
+    };
 
     const targetPoint = toLonLat(initLocation);
 
@@ -102,6 +114,7 @@ const ShelterList = ({ mapRef }) => {
     const handleSubmitReport = (reportText) => {
         // Code to handle report submission
         console.log("Report submitted:", reportText);
+        refreshReports(); // Refresh reports after submission
         handleCloseReportPopup();
     };
 
@@ -145,6 +158,7 @@ const ShelterList = ({ mapRef }) => {
                     onClose={handleCloseReportPopup}
                     onSubmit={handleSubmitReport}
                     report={selectedShelter.report}
+                    refreshReports={refreshReports} // Pass the function to refresh reports
                 />
             )}
 
