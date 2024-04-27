@@ -1,4 +1,3 @@
-/* ShelterList.css */
 .shelter-list-container {
     position: absolute;
     right: 20px;
@@ -28,19 +27,25 @@
   }
   
   .button-container {
-    position: absolute; /* Position the button container absolutely */
-    bottom: 5px; /* Adjust bottom positioning */
-    right: 10px; /* Adjust right positioning */
+    position: absolute;
+    padding: 5px;
+    bottom: 5px; 
+    right: 5px; 
   }
   
   .red-ellipse-button {
-    background-color: red; /* Set the background color of the buttons to red */
-    color: white; /* Set the text color to white for better contrast */
-    border: none; /* Remove the border */
-    border-radius: 20px; /* Make the buttons ellipse */
-    width: 80px; /* Set the width of the buttons */
-    height: 40px; /* Set the height of the buttons */
-    font-size: 12px; /* Adjust font size */
-    cursor: pointer; /* Change cursor to pointer on hover */
-    margin-left: 5px; /* Add margin between buttons */
+    background-color: red;
+    color: white;
+    border: none; 
+    border-radius: 20px;
+    width: 80px; 
+    height: 40px; 
+    font-size: 12px; 
+    cursor: pointer; 
+    margin-left: 5px; 
+  }
+
+  .report {
+    font-size: 12px; /* Adjust font size as needed */
+    color: red;
   }

@@ -1,0 +1,23 @@
+/* SignInButton.css */
+.sign-button-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.sign-button {
+  padding: 10px 20px;
+  background-color: #111010; /* Orange background color */
+  color: #fff; /* White text color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px; /* Adjust spacing between buttons */
+}
+
+.sign-button:last-child {
+  margin-right: 0; /* Remove right margin for the last button */
+}
