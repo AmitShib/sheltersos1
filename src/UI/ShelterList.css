@@ -44,3 +44,8 @@
     cursor: pointer; 
     margin-left: 5px; 
   }
+
+  .report {
+    font-size: 12px; /* Adjust font size as needed */
+    color: red;
+  }

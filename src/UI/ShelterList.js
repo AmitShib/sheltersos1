@@ -7,6 +7,7 @@ import './ShelterList.css';
 import { GlobalContext } from '../GlobalContext';
 import { toast } from 'react-toastify'; // Import the toast library
 import ReportPopup from './ReportPopup';
+import axios from 'axios';
 
 const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
@@ -15,6 +16,8 @@ const ShelterList = ({ mapRef }) => {
 
     const [showReportPopup, setShowReportPopup] = useState(false); // State to manage the visibility of the pop-up
     const [selectedShelter, setSelectedShelter] = useState(null); // State to store the selected shelter
+
+    const [reports, setReports] = useState([]);
 
 
     console.log("initLoc at ShelterList", initLocation);
@@ -37,6 +40,25 @@ const ShelterList = ({ mapRef }) => {
 
         fetchGeoJSON();
     }, []);
+
+    useEffect(() => {
+        const fetchReports = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/reports');
+                const parsedReports = response.data.map(report => ({
+                    ...report,
+                    shelterNum: parseInt(report.shelterNum, 10) // Parse shelterNum to number
+                }));
+                setReports(parsedReports);
+    
+            } catch (error) {
+                console.error('Error fetching reports:', error);
+            }
+        };
+
+        fetchReports();
+    }, []);
+
 
     const targetPoint = toLonLat(initLocation);
 
@@ -86,11 +108,19 @@ const ShelterList = ({ mapRef }) => {
 
     // Process and sort shelters when featureCollection is available
     const sortedShelters = featureCollection
-        ? featureCollection.features.map((feature, index) => ({
-            shelterNumber: index + 1,
-            coordinates: feature.geometry.coordinates,
-            distance: calculateDistance(feature.geometry.coordinates, targetPoint),
-        })).sort((a, b) => a.distance - b.distance).slice(0, 10)
+        ? featureCollection.features.map((feature, index) => {
+            const shelterNumber = index + 1;
+            const coordinates = feature.geometry.coordinates;
+            const distance = calculateDistance(coordinates, targetPoint);
+            const report = reports.find(report => report.shelterNum === shelterNumber); // Find report for the shelterNumber
+
+            return {
+                shelterNumber,
+                coordinates,
+                distance,
+                report: report ? report.report : null, // Set report if available, otherwise null
+            };
+        }).sort((a, b) => a.distance - b.distance).slice(0, 10)
         : [];
 
     return (
@@ -98,9 +128,10 @@ const ShelterList = ({ mapRef }) => {
             <h2>List of Closest Shelters</h2>
             <ul>
                 {sortedShelters.map((shelter, index) => (
-                    <li key={index} className="shelter-item"> {/* Apply the CSS class to each shelter item */}
+                    <li key={index} className="shelter-item">
                         <span className="name"> Shelter Number: {shelter.shelterNumber}</span><br />
                         <span className="distance">{shelter.distance.toFixed(2)} meters away</span><br />
+                        {shelter.report && <span className="report">report: {shelter.report}</span>}<br />
                         <div className="button-container">
                             <button className="red-ellipse-button" onClick={() => zoomToShelter(shelter)}>Navigation</button>
                             <button className="red-ellipse-button" onClick={() => handleReportClick(shelter)}>Report</button>
