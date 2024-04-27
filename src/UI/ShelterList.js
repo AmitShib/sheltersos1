@@ -6,11 +6,16 @@ import { initLocation } from '../Map/MapComponent';
 import './ShelterList.css';
 import { GlobalContext } from '../GlobalContext';
 import { toast } from 'react-toastify'; // Import the toast library
+import ReportPopup from './ReportPopup';
 
 const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
 
     const { isConnected } = useContext(GlobalContext);
+
+    const [showReportPopup, setShowReportPopup] = useState(false); // State to manage the visibility of the pop-up
+    const [selectedShelter, setSelectedShelter] = useState(null); // State to store the selected shelter
+
 
     console.log("initLoc at ShelterList", initLocation);
 
@@ -58,12 +63,24 @@ const ShelterList = ({ mapRef }) => {
         }
     };
 
-    const handleReportClick = () => {
+    const handleReportClick = (shelter) => {
         if (!isConnected) {
             toast.error('Please connect first.'); // Display a toast if not connected
             return;
+        } else {
+            setSelectedShelter(shelter);
+            setShowReportPopup(true);
         }
-        // Code to handle report click when connected
+    };
+
+    const handleCloseReportPopup = () => {
+        setShowReportPopup(false);
+    };
+
+    const handleSubmitReport = (reportText) => {
+        // Code to handle report submission
+        console.log("Report submitted:", reportText);
+        handleCloseReportPopup();
     };
 
 
@@ -86,11 +103,19 @@ const ShelterList = ({ mapRef }) => {
                         <span className="distance">{shelter.distance.toFixed(2)} meters away</span><br />
                         <div className="button-container">
                             <button className="red-ellipse-button" onClick={() => zoomToShelter(shelter)}>Navigation</button>
-                            <button className="red-ellipse-button" onClick={handleReportClick}>Report</button>
+                            <button className="red-ellipse-button" onClick={() => handleReportClick(shelter)}>Report</button>
                         </div>
                     </li>
                 ))}
             </ul>
+            {showReportPopup && (
+                <ReportPopup
+                    shelterNumber={selectedShelter.shelterNumber}
+                    onClose={handleCloseReportPopup}
+                    onSubmit={handleSubmitReport}
+                />
+            )}
+
         </div>
     );
 
