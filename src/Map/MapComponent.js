@@ -22,6 +22,8 @@ import { fromLonLat, toLonLat } from 'ol/proj';
 import { apiKey } from '../config';
 import Overlay from 'ol/Overlay';
 import { GlobalContext } from '../GlobalContext';
+import { toast } from 'react-toastify'; // Import the toast library
+
 
 
 /*   NEED TO ENABLE LOCATION AT THE BROWSER   */
@@ -166,7 +168,7 @@ const MapComponent = ({ mapRef }) => {
             vectorSourceJer.removeFeature(features[0]);
             popupRef.current.setPosition(undefined);
           } else {
-            alert('You need to be a manager to delete features.');
+            toast.error('You have to connect and be a manager to delete features'); 
           }
         };
       }
@@ -176,13 +178,13 @@ const MapComponent = ({ mapRef }) => {
     const stylePointer = (feature) => {
       return new Style({
         image: new Circle({
-          radius: 8, // Adjust the size of the dot as needed
+          radius: 8, 
           fill: new Fill({
-            color: 'blue', // Set the fill color to red
+            color: 'blue', 
           }),
           stroke: new Stroke({
-            color: 'white', // Set the stroke color
-            width: 2, // Set the stroke width
+            color: 'white', 
+            width: 2, 
           }),
         }),
       });
