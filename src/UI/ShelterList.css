@@ -1,51 +1,57 @@
 .shelter-list-container {
-    position: absolute;
-    right: 20px;
-    width: calc(30% - 20px);
-    height: 100%;
-    overflow-y: auto;
-    background-color: #f0f0f0;
+  position: absolute;
+  right: 20px;
+  width: calc(30% - 20px);
+  height: 100%;
+  overflow-y: auto;
+  background-color: #f0f0f0;
 }
 
 .shelter-item {
-    position: relative;
-    background-color: orange;
-    color: black;
-    padding: 10px;
-    margin: 5px 0;
-    margin-right: 10px;
-    list-style-type: none;
-    text-align: left;
+  position: relative;
+  background-color: orange;
+  color: black;
+  padding: 10px;
+  margin: 5px 0;
+  margin-right: 10px;
+  list-style-type: none;
+  text-align: left;
 }
 
-.name{
-    font-size: 24px; 
+.name {
+  font-size: 24px;
 }
 
 .distance {
-    font-size: 14px; 
-  }
-  
-  .button-container {
-    position: absolute;
-    padding: 5px;
-    bottom: 5px; 
-    right: 5px; 
-  }
-  
-  .red-ellipse-button {
-    background-color: red;
-    color: white;
-    border: none; 
-    border-radius: 20px;
-    width: 80px; 
-    height: 40px; 
-    font-size: 12px; 
-    cursor: pointer; 
-    margin-left: 5px; 
-  }
+  font-size: 14px;
+}
 
-  .report {
-    font-size: 12px; /* Adjust font size as needed */
-    color: red;
-  }
+.button-container {
+  display: flex;
+  flex-direction: row; /* Reverse the order of the buttons */
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
+.red-ellipse-button {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  width: 80px;
+  height: 40px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 5px; /* Add some spacing between buttons */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.report {
+  font-size: 12px;
+  /* Adjust font size as needed */
+  color: red;
+}

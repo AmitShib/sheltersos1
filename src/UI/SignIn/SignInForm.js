@@ -11,10 +11,7 @@ const SignInForm = ({onClose}) => {
   const [showModal, setShowModal] = useState(true); // Add a state for modal visibility
   const { isConnected, isAdmin, setIsConnectedValue, setIsAdminValue } = useContext(GlobalContext);
 
-  console.log("connected:",isConnected);
-  console.log("admin:",isAdmin);
-
-
+  
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };

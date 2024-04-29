@@ -12,7 +12,7 @@ import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import holonShelters from '../GisData/holon.geojson';
 import jerusShelters from '../GisData/jerusalem.geojson';
 import './Map.css';
@@ -20,6 +20,11 @@ import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { apiKey } from '../config';
+import Overlay from 'ol/Overlay';
+import { GlobalContext } from '../GlobalContext';
+import { toast } from 'react-toastify'; // Import the toast library
+
+
 
 /*   NEED TO ENABLE LOCATION AT THE BROWSER   */
 const getCurrentLocation = () => {
@@ -50,6 +55,11 @@ let initLocation = currLocation ? olCurrLoc : fromLonLat([35.2134, 31.7683]);
 const MapComponent = ({ mapRef }) => {
 
   const mapContainer = useRef(null);
+
+  const popupRef = useRef(null);
+
+  const { isAdmin, isConnected } = useContext(GlobalContext);
+
 
   let navigationPath;
 
@@ -84,31 +94,107 @@ const MapComponent = ({ mapRef }) => {
       });
     };
 
-    const geoJsonLayer = new VectorLayer({
-      source: new VectorSource({
-        url: jerusShelters,
-        format: new GeoJSON(),
-      }),
+    const vectorSourceJer = new VectorSource({
+      url: jerusShelters,
+      format: new GeoJSON(),
+    });
+
+    const geoJsonLayerJer = new VectorLayer({
+      source: vectorSourceJer,
       style: styleFunction,
       minZoom: 13,
     });
-    map.addLayer(geoJsonLayer);
+    map.addLayer(geoJsonLayerJer);
 
-    const geoJsonLayer1 = new VectorLayer({
-      source: new VectorSource({
-        url: holonShelters,
-        format: new GeoJSON(),
-      }),
+
+    const vectorSourceHolon = new VectorSource({
+      url: holonShelters,
+      format: new GeoJSON(),
+    });
+
+    const geoJsonLayerHolon = new VectorLayer({
+      source: vectorSourceHolon,
       style: styleFunction,
       minZoom: 13,
     });
-    map.addLayer(geoJsonLayer1);
+    map.addLayer(geoJsonLayerHolon);
 
+    const popupElement = document.createElement('div');
+    popupElement.className = 'ol-popup';
+    popupRef.current = new Overlay({
+      element: popupElement,
+      autoPan: true,
+      autoPanAnimation: {
+        duration: 250,
+      },
+    });
+    map.addOverlay(popupRef.current);
+
+    map.on('click', function (event) {
+      map.forEachFeatureAtPixel(event.pixel, function (feature) {
+        const coordinates = feature.getGeometry().getCoordinates();
+        const content = `<p style="color: black; font-size: 12px;"><strong>Coordinates</strong></p><p style="color: black; font-size: 12px;">X: ${coordinates[0]}<br>Y: ${coordinates[1]}</p>`;
+        popupRef.current.setPosition(coordinates);
+        popupElement.innerHTML = content;
+        popupRef.current.setPositioning('top-center');
+        popupElement.style.backgroundColor = 'orange';
+
+        setTimeout(() => {
+          popupRef.current.setPosition(undefined);
+        }, 3000);
+
+      });
+    });
+
+    map.getViewport().addEventListener('contextmenu', function (event) {
+      event.preventDefault(); // Prevent default context menu
+      const pixel = map.getEventPixel(event);
+      const features = map.getFeaturesAtPixel(pixel);
+      if (features.length > 0) {
+        const coordinates = features[0].getGeometry().getCoordinates();
+        popupRef.current.setPosition(coordinates);
+        const content = `<button class="delete-button" onclick="window.deleteFeature()">Delete</button>`;
+        popupElement.innerHTML = content;
+        popupRef.current.setPositioning('top-center');
+        popupElement.style.backgroundColor = 'orange';
+
+        setTimeout(() => {
+          popupRef.current.setPosition(undefined);
+        }, 5000);
+
+        window.deleteFeature = function () {
+          if (isConnected && isAdmin) {
+            vectorSourceHolon.removeFeature(features[0]);
+            vectorSourceJer.removeFeature(features[0]);
+            popupRef.current.setPosition(undefined);
+          } else {
+            toast.error('You have to connect and be a manager to delete features'); 
+          }
+        };
+      }
+    });
+
+
+    const stylePointer = (feature) => {
+      return new Style({
+        image: new Circle({
+          radius: 8, 
+          fill: new Fill({
+            color: 'blue', 
+          }),
+          stroke: new Stroke({
+            color: 'white', 
+            width: 2, 
+          }),
+        }),
+      });
+    };
 
 
     const pointerSource = new VectorSource();
     const pointerLayer = new VectorLayer({
       source: pointerSource,
+      style: stylePointer,
     });
     map.addLayer(pointerLayer);
 
@@ -117,13 +203,7 @@ const MapComponent = ({ mapRef }) => {
       pointerSource.clear();
       const pointerFeature = new Feature({
         geometry: new Point(coordinates),
-        style: new Style({
-          image: new Circle({
-            radius: 20,
-            fill: new Fill({ color: 'blue' }),
-            stroke: new Stroke({ color: 'white', width: 2 }),
-          }),
-        }),
+        style: stylePointer
       });
       pointerSource.addFeature(pointerFeature);
     };
@@ -235,7 +315,7 @@ const MapComponent = ({ mapRef }) => {
     return () => {
       map.dispose();
     };
-  }, []);
+  }, [isConnected, isAdmin]);
 
 
   return (
