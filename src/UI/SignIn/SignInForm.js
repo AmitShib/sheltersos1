@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
-import './SignInForm.css'; 
+import axios from 'axios';
+import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../GlobalContext';
-import axios from 'axios'; 
+import './SignInForm.css';
 
 
 const SignInForm = ({onClose}) => {

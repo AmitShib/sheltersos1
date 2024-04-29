@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import './SignInButton.css'; 
 import { GlobalContext } from '../../GlobalContext';
+import './SignInButton.css';
 
 const SignInButton = ({ onSignInClick, onSignUpClick, onSignOutClick }) => {
 

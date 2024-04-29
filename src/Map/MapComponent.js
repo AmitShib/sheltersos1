@@ -1,28 +1,27 @@
+import Feature from 'ol/Feature';
 import Map from 'ol/Map';
+import Overlay from 'ol/Overlay';
 import View from 'ol/View';
 import GeoJSON from 'ol/format/GeoJSON';
+import LineString from 'ol/geom/LineString';
 import Point from 'ol/geom/Point';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import 'ol/ol.css';
-import * as olProj from 'ol/proj';
+import { fromLonLat, toLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
+import { toast } from 'react-toastify';
 import holonShelters from '../GisData/holon.geojson';
 import jerusShelters from '../GisData/jerusalem.geojson';
-import './Map.css';
-import Feature from 'ol/Feature';
-import LineString from 'ol/geom/LineString';
-import { fromLonLat, toLonLat } from 'ol/proj';
-import { apiKey } from '../config';
-import Overlay from 'ol/Overlay';
 import { GlobalContext } from '../GlobalContext';
-import { toast } from 'react-toastify';
+import { apiKey } from '../config';
+import './Map.css';
 
 
 

@@ -1,13 +1,13 @@
+import axios from 'axios';
 import { toLonLat } from 'ol/proj';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import holonShelters from '../GisData/holon.geojson';
 import jerusShelters from '../GisData/jerusalem.geojson';
-import { initLocation } from '../Map/MapComponent';
-import './ShelterList.css';
 import { GlobalContext } from '../GlobalContext';
-import { toast } from 'react-toastify';
+import { initLocation } from '../Map/MapComponent';
 import ReportPopup from './ReportPopup';
-import axios from 'axios';
+import './ShelterList.css';
 
 const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
