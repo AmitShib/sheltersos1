@@ -22,7 +22,7 @@ import { fromLonLat, toLonLat } from 'ol/proj';
 import { apiKey } from '../config';
 import Overlay from 'ol/Overlay';
 import { GlobalContext } from '../GlobalContext';
-import { toast } from 'react-toastify'; // Import the toast library
+import { toast } from 'react-toastify';
 
 
 
@@ -63,9 +63,8 @@ const MapComponent = ({ mapRef }) => {
 
   let navigationPath;
 
+  /*INITIALIZE MAP AND LAYERS*/
   useEffect(() => {
-    // Initialize map and layers
-    console.log("currLoc", currLocation);
     const map = new Map({
       target: mapContainer.current,
       layers: [
@@ -82,18 +81,19 @@ const MapComponent = ({ mapRef }) => {
     const styleFunction = (feature) => {
       return new Style({
         image: new Circle({
-          radius: 6, // Adjust the size of the dot as needed
+          radius: 6,
           fill: new Fill({
-            color: 'red', // Set the fill color to red
+            color: 'red',
           }),
           stroke: new Stroke({
-            color: 'black', // Set the stroke color
-            width: 2, // Set the stroke width
+            color: 'black',
+            width: 2,
           }),
         }),
       });
     };
 
+    /*JERUSALEM LAYER */
     const vectorSourceJer = new VectorSource({
       url: jerusShelters,
       format: new GeoJSON(),
@@ -106,7 +106,7 @@ const MapComponent = ({ mapRef }) => {
     });
     map.addLayer(geoJsonLayerJer);
 
-
+    /*HOLON LAYER */
     const vectorSourceHolon = new VectorSource({
       url: holonShelters,
       format: new GeoJSON(),
@@ -119,6 +119,7 @@ const MapComponent = ({ mapRef }) => {
     });
     map.addLayer(geoJsonLayerHolon);
 
+    /*MAP POPUP */
     const popupElement = document.createElement('div');
     popupElement.className = 'ol-popup';
     popupRef.current = new Overlay({
@@ -130,6 +131,7 @@ const MapComponent = ({ mapRef }) => {
     });
     map.addOverlay(popupRef.current);
 
+    /*DEFINE CLICK ON MAP FEATURE */
     map.on('click', function (event) {
       map.forEachFeatureAtPixel(event.pixel, function (feature) {
         const coordinates = feature.getGeometry().getCoordinates();
@@ -146,6 +148,7 @@ const MapComponent = ({ mapRef }) => {
       });
     });
 
+    /*DEFINE RIGHT CLICK ON MAP FEATURE */
     map.getViewport().addEventListener('contextmenu', function (event) {
       event.preventDefault(); // Prevent default context menu
       const pixel = map.getEventPixel(event);
@@ -168,23 +171,24 @@ const MapComponent = ({ mapRef }) => {
             vectorSourceJer.removeFeature(features[0]);
             popupRef.current.setPosition(undefined);
           } else {
-            toast.error('You have to connect and be a manager to delete features'); 
+            toast.error('You have to connect and be a manager to delete features');
           }
         };
       }
     });
 
 
+    /*DRAW CURRENT LOCATION */
     const stylePointer = (feature) => {
       return new Style({
         image: new Circle({
-          radius: 8, 
+          radius: 8,
           fill: new Fill({
-            color: 'blue', 
+            color: 'blue',
           }),
           stroke: new Stroke({
-            color: 'white', 
-            width: 2, 
+            color: 'white',
+            width: 2,
           }),
         }),
       });
@@ -210,36 +214,29 @@ const MapComponent = ({ mapRef }) => {
 
     addPointer(initLocation);
 
-
-
-    console.log("navigationPath in map", navigationPath);
-
     mapRef.current = map;
 
+    /*ZOOM TO SHELTER FUNC WHEN NAVIGATE */
     const zoomToShelter = (shelter) => {
       const map = mapRef.current;
       const coordinates = fromLonLat(shelter.coordinates);
       if (map) {
         map.getView().animate({
           center: coordinates,
-          zoom: 18,
+          zoom: 17,
           duration: 1000,
         });
-        console.log("navigationPath in zoom", navigationPath);
         drawNavigationPath(initLocation, fromLonLat(shelter.coordinates));
 
         const intervalId = setInterval(async () => {
           try {
             const newCurrentLocation = await getCurrentLocation();
             const olNewCurrLoc = fromLonLat(newCurrentLocation);
-            console.log("newCurrLoc", newCurrentLocation);
-            console.log("olnewCurrLoc", olNewCurrLoc);
             addPointer(olNewCurrLoc);
           } catch (error) {
             console.error('Error getting current location:', error);
           }
-        }, 10000); // Update every 10 seconds
-        // Clean up interval on component unmount
+        }, 10000);
         return () => clearInterval(intervalId);
 
       }
@@ -247,6 +244,7 @@ const MapComponent = ({ mapRef }) => {
 
     mapRef.current.zoomToShelter = zoomToShelter;
 
+    /* DRAW PATH USING API WHEN NAVIGATE */
     const drawNavigationPath = async (start, end) => {
       const startCoor = toLonLat(start);
       const endCoor = toLonLat(end);
@@ -258,18 +256,11 @@ const MapComponent = ({ mapRef }) => {
         }
       })
         .then(response => {
-          console.log('Status:', response.status);
-          console.log('Headers:', response.headers);
           return response.json();
         })
         .then(data => {
-          console.log('Body:', data);
           const routeCoordinates = data.features[0].geometry.coordinates;
-
           const convertRouteCoordinates = routeCoordinates.map(coord => fromLonLat(coord));
-
-          console.log("routeCoordinates", routeCoordinates);
-          console.log("convertRouteCoordinates", convertRouteCoordinates);
 
           const lineString = new LineString(convertRouteCoordinates);
 
@@ -297,9 +288,6 @@ const MapComponent = ({ mapRef }) => {
             }),
           });
 
-          console.log("navigationPath in draw", navigationPath);
-
-
           mapRef.current.addLayer(navigationPath);
 
         })
@@ -311,12 +299,10 @@ const MapComponent = ({ mapRef }) => {
 
     mapRef.current.initLocation = initLocation;
 
-
     return () => {
       map.dispose();
     };
   }, [isConnected, isAdmin]);
-
 
   return (
     <div id="map" ref={mapContainer}></div>

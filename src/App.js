@@ -13,12 +13,10 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
-  const mapRef = useRef(null); // Create a ref for the map instance
+  const mapRef = useRef(null); 
 
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
-
-  // const {setIsConnectedValue, setIsAdminValue } = useContext(GlobalContext);
 
   const handleSignInButtonClick = () => {
     setShowSignInModal(true);
@@ -28,14 +26,9 @@ function App() {
     setShowSignUpModal(true);
   };
 
-//   const handleSignOutButtonClick = () => {
-//     setIsConnectedValue(false);
-//     setIsAdminValue(false);
-// };
-
   const handleCloseModal = () => {
     setShowSignInModal(false);
-    setShowSignUpModal(false); // Close both modals when any one is closed
+    setShowSignUpModal(false); 
   };
 
 

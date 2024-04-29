@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
-import './ReportPopup.css'; // Add your CSS for styling the pop-up
+import './ReportPopup.css';
 import axios from 'axios';
 
 
 const ReportPopup = ({ shelterNumber, onClose, onSubmit, report, refreshReports }) => {
 
-    const [reportText, setReportText] = useState(report ? report : ''); 
+    const [reportText, setReportText] = useState(report ? report : '');
 
     const handleInputChange = (event) => {
-        setReportText(event.target.value.slice(0, 30)); // Limiting input to 30 characters
+        setReportText(event.target.value.slice(0, 30));
     };
 
+    /*SUBMIT REPORT */
     const handleSubmit = async () => {
         try {
             if (report === null) {
-                // If report is null, use POST request to add new report
                 await axios.post('http://localhost:3000/api/reports', { shelterNum: shelterNumber, report: reportText });
             } else {
-                // If report is not null, use PUT request to update existing report
                 await axios.put(`http://localhost:3000/api/reports/${shelterNumber}`, { report: reportText });
             }
             onSubmit(reportText);
