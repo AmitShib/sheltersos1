@@ -1,24 +1,22 @@
-import React, { useRef, useState , useContext } from 'react';
-import './App.css';
-import MapComponent from './Map/MapComponent';
-import ShelterList from './UI/ShelterList';
-import SignInButton from './UI/SignIn/SignInButton';
-import Modal from './UI/SignIn/Modal';
-import SignUpForm from './UI/SignIn/SignUpForm';
-import SignInForm from './UI/SignIn/SignInForm';
-import { GlobalProvider , GlobalContext} from './GlobalContext';
+import React, { useRef, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
+import { GlobalContext, GlobalProvider } from './GlobalContext';
+import MapComponent from './Map/MapComponent';
+import ShelterList from './UI/ShelterList';
+import Modal from './UI/SignIn/Modal';
+import SignInButton from './UI/SignIn/SignInButton';
+import SignInForm from './UI/SignIn/SignInForm';
+import SignUpForm from './UI/SignIn/SignUpForm';
 
 
 function App() {
 
-  const mapRef = useRef(null); // Create a ref for the map instance
+  const mapRef = useRef(null); 
 
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
-
-  // const {setIsConnectedValue, setIsAdminValue } = useContext(GlobalContext);
 
   const handleSignInButtonClick = () => {
     setShowSignInModal(true);
@@ -28,14 +26,9 @@ function App() {
     setShowSignUpModal(true);
   };
 
-//   const handleSignOutButtonClick = () => {
-//     setIsConnectedValue(false);
-//     setIsAdminValue(false);
-// };
-
   const handleCloseModal = () => {
     setShowSignInModal(false);
-    setShowSignUpModal(false); // Close both modals when any one is closed
+    setShowSignUpModal(false); 
   };
 
 

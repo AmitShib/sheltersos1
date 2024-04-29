@@ -1,7 +1,6 @@
-// SignInButton.js
 import React, { useContext } from 'react';
-import './SignInButton.css'; // Import the CSS file for styling
 import { GlobalContext } from '../../GlobalContext';
+import './SignInButton.css';
 
 const SignInButton = ({ onSignInClick, onSignUpClick, onSignOutClick }) => {
 

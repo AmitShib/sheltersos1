@@ -1,14 +1,13 @@
-// SignInForm.js
-import React, { useState, useContext } from 'react';
-import './SignInForm.css'; // Import the CSS file for styling
+import axios from 'axios';
+import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../GlobalContext';
-import axios from 'axios'; // Import axios
+import './SignInForm.css';
 
 
 const SignInForm = ({onClose}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showModal, setShowModal] = useState(true); // Add a state for modal visibility
+  const [showModal, setShowModal] = useState(true); 
   const { isConnected, isAdmin, setIsConnectedValue, setIsAdminValue } = useContext(GlobalContext);
 
   
@@ -22,35 +21,26 @@ const SignInForm = ({onClose}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitted:', { username, password });
 
     try {
-      // Send a GET request to check if the user exists
       const response = await axios.get(`http://localhost:3000/api/users/${username}`);
       const user = response.data;
 
-      // Check if the user exists and the password matches
       if (user && user.password === password) {
-        setIsConnectedValue(true); // Set isConnected to true
-        setIsAdminValue(user.isManager); // Set isAdmin based on the user's isManager value
-
-        console.log("connected:",isConnected);
-        console.log("admin:",isAdmin);      
-        console.log('User authenticated:', user);
-
-        setShowModal(false); // Set showModal to false to close the modal
+        setIsConnectedValue(true); 
+        setIsAdminValue(user.isManager); 
+        setShowModal(false); 
         onClose();
 
       } else {
         console.log('Invalid username or password');
-        setIsConnectedValue(false); // Set isConnected to false
-        setIsAdminValue(false); // Set isAdmin to false
-        // You can add additional logic here, such as displaying an error message
+        setIsConnectedValue(false); 
+        setIsAdminValue(false); 
       }
     } catch (error) {
       console.error('Error authenticating user:', error);
-      setIsConnectedValue(false); // Set isConnected to false
-      setIsAdminValue(false); // Set isAdmin to false
+      setIsConnectedValue(false); 
+      setIsAdminValue(false); 
     }
 
   };

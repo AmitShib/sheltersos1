@@ -1,26 +1,23 @@
+import axios from 'axios';
 import { toLonLat } from 'ol/proj';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import holonShelters from '../GisData/holon.geojson';
 import jerusShelters from '../GisData/jerusalem.geojson';
-import { initLocation } from '../Map/MapComponent';
-import './ShelterList.css';
 import { GlobalContext } from '../GlobalContext';
-import { toast } from 'react-toastify'; // Import the toast library
+import { initLocation } from '../Map/MapComponent';
 import ReportPopup from './ReportPopup';
-import axios from 'axios';
+import './ShelterList.css';
 
 const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
 
     const { isConnected } = useContext(GlobalContext);
 
-    const [showReportPopup, setShowReportPopup] = useState(false); // State to manage the visibility of the pop-up
-    const [selectedShelter, setSelectedShelter] = useState(null); // State to store the selected shelter
+    const [showReportPopup, setShowReportPopup] = useState(false);
+    const [selectedShelter, setSelectedShelter] = useState(null);
 
     const [reports, setReports] = useState([]);
-
-
-    console.log("initLoc at ShelterList", initLocation);
 
     useEffect(() => {
         const fetchGeoJSON = async () => {
@@ -47,10 +44,10 @@ const ShelterList = ({ mapRef }) => {
                 const response = await axios.get('http://localhost:3000/api/reports');
                 const parsedReports = response.data.map(report => ({
                     ...report,
-                    shelterNum: parseInt(report.shelterNum, 10) // Parse shelterNum to number
+                    shelterNum: parseInt(report.shelterNum, 10)
                 }));
                 setReports(parsedReports);
-    
+
             } catch (error) {
                 console.error('Error fetching reports:', error);
             }
@@ -99,7 +96,7 @@ const ShelterList = ({ mapRef }) => {
 
     const handleReportClick = (shelter) => {
         if (!isConnected) {
-            toast.error('Please connect first.'); // Display a toast if not connected
+            toast.error('Please connect first.');
             return;
         } else {
             setSelectedShelter(shelter);
@@ -112,32 +109,30 @@ const ShelterList = ({ mapRef }) => {
     };
 
     const handleSubmitReport = (reportText) => {
-        // Code to handle report submission
-        console.log("Report submitted:", reportText);
-        refreshReports(); // Refresh reports after submission
+        refreshReports();
         handleCloseReportPopup();
     };
 
 
-    // Process and sort shelters when featureCollection is available
+    /*PROCESS AND SORT SHELTERS WHEN FEATURECOLLECTION IS AVAILABLE */
     const sortedShelters = featureCollection
         ? featureCollection.features.map((feature, index) => {
             const shelterNumber = index + 1;
             const coordinates = feature.geometry.coordinates;
             const distance = calculateDistance(coordinates, targetPoint);
-            const report = reports.find(report => report.shelterNum === shelterNumber); // Find report for the shelterNumber
+            const report = reports.find(report => report.shelterNum === shelterNumber); 
 
             return {
                 shelterNumber,
                 coordinates,
                 distance,
-                report: report ? report.report : null, // Set report if available, otherwise null
+                report: report ? report.report : null, 
             };
         }).sort((a, b) => a.distance - b.distance).slice(0, 10)
         : [];
 
     return (
-        <div className="shelter-list-container"> {/* Apply the CSS class to the container */}
+        <div className="shelter-list-container"> 
             <h2>List of Closest Shelters</h2>
             <ul>
                 {sortedShelters.map((shelter, index) => (
@@ -158,7 +153,7 @@ const ShelterList = ({ mapRef }) => {
                     onClose={handleCloseReportPopup}
                     onSubmit={handleSubmitReport}
                     report={selectedShelter.report}
-                    refreshReports={refreshReports} // Pass the function to refresh reports
+                    refreshReports={refreshReports} 
                 />
             )}
 

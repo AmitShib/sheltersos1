@@ -5,17 +5,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    background-color: rgba(0, 0, 0, 0.5); 
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
   .modal {
-    background-color: #ffa500; /* Orange background */
+    background-color: #ffa500; 
     padding: 20px;
     border-radius: 5px;
-    position: relative; /* Position relative for absolute positioning of the close button */
+    position: relative; 
   }
   
   .close-button {

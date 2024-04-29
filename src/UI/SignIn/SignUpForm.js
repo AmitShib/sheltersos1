@@ -1,19 +1,15 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios'; // Import axios
-import './SignUpForm.css'; // Import the CSS file for styling
+import axios from 'axios';
+import React, { useContext, useState } from 'react';
 import { GlobalContext } from '../../GlobalContext';
+import './SignUpForm.css';
 
 const SignUpForm = ({onClose}) => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isManager, setIsManager] = useState(false);
-    const [showModal, setShowModal] = useState(true); // Add a state for modal visibility
+    const [showModal, setShowModal] = useState(true); 
     const { isConnected, isAdmin, setIsConnectedValue, setIsAdminValue } = useContext(GlobalContext);
-
-    console.log("connected:",isConnected);
-    console.log("admin:",isAdmin);
-
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -24,34 +20,28 @@ const SignUpForm = ({onClose}) => {
     };
 
     const handleIsManagerChange = (e) => {
-        setIsManager(e.target.value === 'true'); // Update isManager based on the select value
+        setIsManager(e.target.value === 'true'); 
     };
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submitted:', { username, password });
 
         try {
             const response = await axios.post('http://localhost:3000/api/users', {
                 userName: username,
                 password: password,
-                isManager: isManager, // Set isManager based on the selected permission
+                isManager: isManager, 
             });
 
-            setIsConnectedValue(true); // Set isConnected to true
-            setIsAdminValue(isManager); // Set isAdmin based on the selected permission
-
-            console.log('User added:', response.data);
-            console.log("connected:",isConnected);
-            console.log("admin:",isAdmin);
-
-            setShowModal(false); // Set showModal to false to close the modal
+            setIsConnectedValue(true); 
+            setIsAdminValue(isManager); 
+            setShowModal(false); 
             onClose();
-            // You can add additional logic here, such as displaying a success message or clearing the form
+
         } catch (error) {
             console.error('Error adding user:', error);
-            setIsConnectedValue(false); // Set isConnected to false in case of an error
+            setIsConnectedValue(false); 
         }
     };
 
