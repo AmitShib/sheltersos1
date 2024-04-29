@@ -62,7 +62,7 @@ const SignUpForm = ({onClose}) => {
 
     return (
         <div className="sign-container" onClick={stopPropagation}>
-            <h2>Sign In</h2>
+            <h2>Sign Up</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="username">Username:</label>

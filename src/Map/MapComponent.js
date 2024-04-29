@@ -12,7 +12,7 @@ import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import holonShelters from '../GisData/holon.geojson';
 import jerusShelters from '../GisData/jerusalem.geojson';
 import './Map.css';
@@ -21,6 +21,7 @@ import LineString from 'ol/geom/LineString';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { apiKey } from '../config';
 import Overlay from 'ol/Overlay';
+import { GlobalContext } from '../GlobalContext';
 
 
 /*   NEED TO ENABLE LOCATION AT THE BROWSER   */
@@ -54,6 +55,9 @@ const MapComponent = ({ mapRef }) => {
   const mapContainer = useRef(null);
 
   const popupRef = useRef(null);
+
+  const { isAdmin, isConnected } = useContext(GlobalContext);
+
 
   let navigationPath;
 
@@ -140,28 +144,35 @@ const MapComponent = ({ mapRef }) => {
       });
     });
 
-    map.on('contextmenu', function (event) {
-      map.forEachFeatureAtPixel(event.pixel, function (feature) {
-        const coordinates = feature.getGeometry().getCoordinates();
+    map.getViewport().addEventListener('contextmenu', function (event) {
+      event.preventDefault(); // Prevent default context menu
+      const pixel = map.getEventPixel(event);
+      const features = map.getFeaturesAtPixel(pixel);
+      if (features.length > 0) {
+        const coordinates = features[0].getGeometry().getCoordinates();
         popupRef.current.setPosition(coordinates);
-        const content = `<button onclick="deleteFeature()">Delete</button>`;
+        const content = `<button class="delete-button" onclick="window.deleteFeature()">Delete</button>`;
         popupElement.innerHTML = content;
         popupRef.current.setPositioning('top-center');
         popupElement.style.backgroundColor = 'orange';
 
-        window.deleteFeature = function () {
-          vectorSourceJer.removeFeature(feature);
-          vectorSourceHolon.removeFeature(feature);
+        setTimeout(() => {
           popupRef.current.setPosition(undefined);
-        }
+        }, 5000);
 
-      });
+        window.deleteFeature = function () {
+          if (isConnected && isAdmin) {
+            vectorSourceHolon.removeFeature(features[0]);
+            vectorSourceJer.removeFeature(features[0]);
+            popupRef.current.setPosition(undefined);
+          } else{
+            alert('You need to be a manager to delete features.');
+          }
+        };
+      }
     });
 
-
-
-
-
+    
     const pointerSource = new VectorSource();
     const pointerLayer = new VectorLayer({
       source: pointerSource,
@@ -291,7 +302,7 @@ const MapComponent = ({ mapRef }) => {
     return () => {
       map.dispose();
     };
-  }, []);
+  }, [isConnected, isAdmin]);
 
 
   return (
