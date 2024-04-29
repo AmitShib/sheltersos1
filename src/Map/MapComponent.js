@@ -20,6 +20,8 @@ import Feature from 'ol/Feature';
 import LineString from 'ol/geom/LineString';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import { apiKey } from '../config';
+import Overlay from 'ol/Overlay';
+
 
 /*   NEED TO ENABLE LOCATION AT THE BROWSER   */
 const getCurrentLocation = () => {
@@ -50,6 +52,8 @@ let initLocation = currLocation ? olCurrLoc : fromLonLat([35.2134, 31.7683]);
 const MapComponent = ({ mapRef }) => {
 
   const mapContainer = useRef(null);
+
+  const popupRef = useRef(null);
 
   let navigationPath;
 
@@ -103,6 +107,34 @@ const MapComponent = ({ mapRef }) => {
       minZoom: 13,
     });
     map.addLayer(geoJsonLayer1);
+
+    const popupElement = document.createElement('div');
+    popupElement.className = 'ol-popup';
+    popupRef.current = new Overlay({
+      element: popupElement,
+      autoPan: true,
+      autoPanAnimation: {
+        duration: 250,
+      },
+    });
+    map.addOverlay(popupRef.current);
+
+    map.on('click', function (event) {
+      map.forEachFeatureAtPixel(event.pixel, function (feature) {
+        const coordinates = feature.getGeometry().getCoordinates();
+        const content = `<p style="color: black; font-size: 12px;"><strong>Coordinates</strong></p><p style="color: black; font-size: 12px;">X: ${coordinates[0]}<br>Y: ${coordinates[1]}</p>`;
+        popupRef.current.setPosition(coordinates);
+        popupElement.innerHTML = content;
+        popupRef.current.setPositioning('top-center');
+        popupElement.style.backgroundColor = 'orange';
+
+        setTimeout(() => {
+          popupRef.current.setPosition(undefined);
+        }, 3000);
+
+      });
+    });
+
 
 
 
