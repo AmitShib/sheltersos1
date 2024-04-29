@@ -88,25 +88,30 @@ const MapComponent = ({ mapRef }) => {
       });
     };
 
-    const geoJsonLayer = new VectorLayer({
-      source: new VectorSource({
-        url: jerusShelters,
-        format: new GeoJSON(),
-      }),
-      style: styleFunction,
-      minZoom: 13,
+    const vectorSourceJer = new VectorSource({
+      url: jerusShelters,
+      format: new GeoJSON(),
     });
-    map.addLayer(geoJsonLayer);
 
-    const geoJsonLayer1 = new VectorLayer({
-      source: new VectorSource({
-        url: holonShelters,
-        format: new GeoJSON(),
-      }),
+    const geoJsonLayerJer = new VectorLayer({
+      source: vectorSourceJer,
       style: styleFunction,
       minZoom: 13,
     });
-    map.addLayer(geoJsonLayer1);
+    map.addLayer(geoJsonLayerJer);
+
+
+    const vectorSourceHolon = new VectorSource({
+      url: holonShelters,
+      format: new GeoJSON(),
+    });
+
+    const geoJsonLayerHolon = new VectorLayer({
+      source: vectorSourceHolon,
+      style: styleFunction,
+      minZoom: 13,
+    });
+    map.addLayer(geoJsonLayerHolon);
 
     const popupElement = document.createElement('div');
     popupElement.className = 'ol-popup';
@@ -134,6 +139,25 @@ const MapComponent = ({ mapRef }) => {
 
       });
     });
+
+    map.on('contextmenu', function (event) {
+      map.forEachFeatureAtPixel(event.pixel, function (feature) {
+        const coordinates = feature.getGeometry().getCoordinates();
+        popupRef.current.setPosition(coordinates);
+        const content = `<button onclick="deleteFeature()">Delete</button>`;
+        popupElement.innerHTML = content;
+        popupRef.current.setPositioning('top-center');
+        popupElement.style.backgroundColor = 'orange';
+
+        window.deleteFeature = function () {
+          vectorSourceJer.removeFeature(feature);
+          vectorSourceHolon.removeFeature(feature);
+          popupRef.current.setPosition(undefined);
+        }
+
+      });
+    });
+
 
 
 
