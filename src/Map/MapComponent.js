@@ -165,17 +165,34 @@ const MapComponent = ({ mapRef }) => {
             vectorSourceHolon.removeFeature(features[0]);
             vectorSourceJer.removeFeature(features[0]);
             popupRef.current.setPosition(undefined);
-          } else{
+          } else {
             alert('You need to be a manager to delete features.');
           }
         };
       }
     });
 
-    
+
+    const stylePointer = (feature) => {
+      return new Style({
+        image: new Circle({
+          radius: 8, // Adjust the size of the dot as needed
+          fill: new Fill({
+            color: 'blue', // Set the fill color to red
+          }),
+          stroke: new Stroke({
+            color: 'white', // Set the stroke color
+            width: 2, // Set the stroke width
+          }),
+        }),
+      });
+    };
+
+
     const pointerSource = new VectorSource();
     const pointerLayer = new VectorLayer({
       source: pointerSource,
+      style: stylePointer,
     });
     map.addLayer(pointerLayer);
 
@@ -184,13 +201,7 @@ const MapComponent = ({ mapRef }) => {
       pointerSource.clear();
       const pointerFeature = new Feature({
         geometry: new Point(coordinates),
-        style: new Style({
-          image: new Circle({
-            radius: 20,
-            fill: new Fill({ color: 'blue' }),
-            stroke: new Stroke({ color: 'white', width: 2 }),
-          }),
-        }),
+        style: stylePointer
       });
       pointerSource.addFeature(pointerFeature);
     };
