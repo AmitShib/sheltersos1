@@ -19,25 +19,6 @@ function App() {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
 
-  const [reports, setReports] = useState([]);
-
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/api/reports');
-        const parsedReports = response.data.map(report => ({
-          ...report,
-          shelterNum: parseInt(report.shelterNum, 10)
-        }));
-        setReports(parsedReports);
-      } catch (error) {
-        console.error('Error fetching reports:', error);
-      }
-    };
-
-    fetchReports();
-  }, []);
-
 
   const handleSignInButtonClick = () => {
     setShowSignInModal(true);
