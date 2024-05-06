@@ -12,7 +12,7 @@ import './ShelterList.css';
 const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
 
-    const { isConnected } = useContext(GlobalContext);
+    const { isConnected , setReportsValue } = useContext(GlobalContext);
 
     const [showReportPopup, setShowReportPopup] = useState(false);
     const [selectedShelter, setSelectedShelter] = useState(null);
@@ -47,7 +47,6 @@ const ShelterList = ({ mapRef }) => {
                     shelterNum: parseInt(report.shelterNum, 10)
                 }));
                 setReports(parsedReports);
-
             } catch (error) {
                 console.error('Error fetching reports:', error);
             }
@@ -64,6 +63,7 @@ const ShelterList = ({ mapRef }) => {
                 shelterNum: parseInt(report.shelterNum, 10)
             }));
             setReports(parsedReports);
+            setReportsValue(parsedReports);
         } catch (error) {
             console.error('Error fetching reports:', error);
         }
@@ -117,10 +117,12 @@ const ShelterList = ({ mapRef }) => {
     /*PROCESS AND SORT SHELTERS WHEN FEATURECOLLECTION IS AVAILABLE */
     const sortedShelters = featureCollection
         ? featureCollection.features.map((feature, index) => {
-            const shelterNumber = index + 1;
+            // const shelterNumber = index + 1;
+            const shelterNumber = feature.properties.OBJECTID;
             const coordinates = feature.geometry.coordinates;
             const distance = calculateDistance(coordinates, targetPoint);
             const report = reports.find(report => report.shelterNum === shelterNumber); 
+            // console.log("shelter reports", reports);
 
             return {
                 shelterNumber,
@@ -133,13 +135,13 @@ const ShelterList = ({ mapRef }) => {
 
     return (
         <div className="shelter-list-container"> 
-            <h2>List of Closest Shelters</h2>
+            <h2 className="shelter-list-header">List of Closest Shelters</h2>
             <ul>
                 {sortedShelters.map((shelter, index) => (
                     <li key={index} className="shelter-item">
                         <span className="name"> Shelter Number: {shelter.shelterNumber}</span><br />
                         <span className="distance">{shelter.distance.toFixed(2)} meters away</span><br />
-                        {shelter.report && <span className="report">report: {shelter.report}</span>}<br />
+                        {shelter.report && <span className="report">Status: {shelter.report}</span>}<br />
                         <div className="button-container">
                             <button className="red-ellipse-button" onClick={() => zoomToShelter(shelter)}>Navigation</button>
                             <button className="red-ellipse-button" onClick={() => handleReportClick(shelter)}>Report</button>

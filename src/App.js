@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
@@ -9,14 +9,15 @@ import Modal from './UI/SignIn/Modal';
 import SignInButton from './UI/SignIn/SignInButton';
 import SignInForm from './UI/SignIn/SignInForm';
 import SignUpForm from './UI/SignIn/SignUpForm';
-
+import MapHelp from './UI/MapHelp';
 
 function App() {
 
-  const mapRef = useRef(null); 
+  const mapRef = useRef(null);
 
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
+
 
   const handleSignInButtonClick = () => {
     setShowSignInModal(true);
@@ -28,7 +29,7 @@ function App() {
 
   const handleCloseModal = () => {
     setShowSignInModal(false);
-    setShowSignUpModal(false); 
+    setShowSignUpModal(false);
   };
 
 

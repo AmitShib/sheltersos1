@@ -1,3 +1,7 @@
+.shelter-list-header {
+  color: orange;
+}
+
 .shelter-list-container {
   position: absolute;
   right: 20px;
@@ -16,6 +20,7 @@
   margin-right: 10px;
   list-style-type: none;
   text-align: left;
+  border-radius: 10px;
 }
 
 .name {
