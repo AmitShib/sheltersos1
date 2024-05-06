@@ -1,4 +1,4 @@
-import React, { useRef, useState ,useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
@@ -14,7 +14,7 @@ import axios from 'axios';
 
 function App() {
 
-  const mapRef = useRef(null); 
+  const mapRef = useRef(null);
 
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -23,20 +23,20 @@ function App() {
 
   useEffect(() => {
     const fetchReports = async () => {
-        try {
-            const response = await axios.get('http://localhost:3000/api/reports');
-            const parsedReports = response.data.map(report => ({
-                ...report,
-                shelterNum: parseInt(report.shelterNum, 10)
-            }));
-            setReports(parsedReports);
-        } catch (error) {
-            console.error('Error fetching reports:', error);
-        }
+      try {
+        const response = await axios.get('http://localhost:3000/api/reports');
+        const parsedReports = response.data.map(report => ({
+          ...report,
+          shelterNum: parseInt(report.shelterNum, 10)
+        }));
+        setReports(parsedReports);
+      } catch (error) {
+        console.error('Error fetching reports:', error);
+      }
     };
 
     fetchReports();
-}, []);
+  }, []);
 
 
   const handleSignInButtonClick = () => {
@@ -49,7 +49,7 @@ function App() {
 
   const handleCloseModal = () => {
     setShowSignInModal(false);
-    setShowSignUpModal(false); 
+    setShowSignUpModal(false);
   };
 
 
@@ -59,7 +59,7 @@ function App() {
         {({ setIsConnectedValue, setIsAdminValue }) => (
           <div className="App">
             <header className="App-header">
-              <MapComponent mapRef={mapRef} reports={reports} />
+              <MapComponent mapRef={mapRef} />
               <ShelterList mapRef={mapRef} />
               <SignInButton
                 onSignInClick={handleSignInButtonClick}

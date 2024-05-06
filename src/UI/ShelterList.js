@@ -12,7 +12,7 @@ import './ShelterList.css';
 const ShelterList = ({ mapRef }) => {
     const [featureCollection, setFeatureCollection] = useState(null);
 
-    const { isConnected } = useContext(GlobalContext);
+    const { isConnected , setReportsValue } = useContext(GlobalContext);
 
     const [showReportPopup, setShowReportPopup] = useState(false);
     const [selectedShelter, setSelectedShelter] = useState(null);
@@ -63,6 +63,7 @@ const ShelterList = ({ mapRef }) => {
                 shelterNum: parseInt(report.shelterNum, 10)
             }));
             setReports(parsedReports);
+            setReportsValue(parsedReports);
         } catch (error) {
             console.error('Error fetching reports:', error);
         }

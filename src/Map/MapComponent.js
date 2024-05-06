@@ -53,13 +53,13 @@ const olCurrLoc = fromLonLat(currLocation);
 let initLocation = currLocation ? olCurrLoc : fromLonLat([35.2134, 31.7683]);
 
 
-const MapComponent = ({ mapRef, reports }) => {
+const MapComponent = ({ mapRef }) => {
 
   const mapContainer = useRef(null);
 
   const popupRef = useRef(null);
 
-  const { isAdmin, isConnected } = useContext(GlobalContext);
+  const { isAdmin, isConnected , reports} = useContext(GlobalContext);
 
 
 
