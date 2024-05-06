@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState ,useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
@@ -9,6 +9,7 @@ import Modal from './UI/SignIn/Modal';
 import SignInButton from './UI/SignIn/SignInButton';
 import SignInForm from './UI/SignIn/SignInForm';
 import SignUpForm from './UI/SignIn/SignUpForm';
+import axios from 'axios';
 
 
 function App() {
@@ -17,6 +18,26 @@ function App() {
 
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
+
+  const [reports, setReports] = useState([]);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/api/reports');
+            const parsedReports = response.data.map(report => ({
+                ...report,
+                shelterNum: parseInt(report.shelterNum, 10)
+            }));
+            setReports(parsedReports);
+        } catch (error) {
+            console.error('Error fetching reports:', error);
+        }
+    };
+
+    fetchReports();
+}, []);
+
 
   const handleSignInButtonClick = () => {
     setShowSignInModal(true);
@@ -38,7 +59,7 @@ function App() {
         {({ setIsConnectedValue, setIsAdminValue }) => (
           <div className="App">
             <header className="App-header">
-              <MapComponent mapRef={mapRef} />
+              <MapComponent mapRef={mapRef} reports={reports} />
               <ShelterList mapRef={mapRef} />
               <SignInButton
                 onSignInClick={handleSignInButtonClick}

@@ -15,13 +15,15 @@ import Circle from 'ol/style/Circle';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import holonShelters from '../GisData/holon.geojson';
 import jerusShelters from '../GisData/jerusalem.geojson';
 import { GlobalContext } from '../GlobalContext';
 import { apiKey } from '../config';
 import './Map.css';
+import axios from 'axios';
+
 
 
 
@@ -51,19 +53,21 @@ const olCurrLoc = fromLonLat(currLocation);
 let initLocation = currLocation ? olCurrLoc : fromLonLat([35.2134, 31.7683]);
 
 
-const MapComponent = ({ mapRef }) => {
+const MapComponent = ({ mapRef, reports }) => {
 
   const mapContainer = useRef(null);
 
   const popupRef = useRef(null);
 
   const { isAdmin, isConnected } = useContext(GlobalContext);
-
+  const [loading, setLoading] = useState(true);
 
   let navigationPath;
 
   /*INITIALIZE MAP AND LAYERS*/
   useEffect(() => {
+    if (reports.length > 0) {
+
     const map = new Map({
       target: mapContainer.current,
       layers: [
@@ -78,11 +82,22 @@ const MapComponent = ({ mapRef }) => {
     });
 
     const styleFunction = (feature) => {
+      // console.log("feature", feature);
+      const shelterNum = feature.getProperties().OBJECTID;
+      console.log("shelternum", shelterNum);
+      console.log("reports", reports);
+      const report = reports.find((report) => report.shelterNum === shelterNum);
+
+      let fillColor = 'green';
+      if (report && report.report) {
+        fillColor = 'red';
+      }
+
       return new Style({
         image: new Circle({
           radius: 6,
           fill: new Fill({
-            color: 'red',
+            color: fillColor,
           }),
           stroke: new Stroke({
             color: 'black',
@@ -242,7 +257,6 @@ const MapComponent = ({ mapRef }) => {
     };
 
     mapRef.current.zoomToShelter = zoomToShelter;
-
     /* DRAW PATH USING API WHEN NAVIGATE */
     const drawNavigationPath = async (start, end) => {
       const startCoor = toLonLat(start);
@@ -297,11 +311,13 @@ const MapComponent = ({ mapRef }) => {
     };
 
     mapRef.current.initLocation = initLocation;
+    
 
     return () => {
       map.dispose();
     };
-  }, [isConnected, isAdmin]);
+  }
+  }, [reports,isConnected, isAdmin]);
 
   return (
     <div id="map" ref={mapContainer}></div>

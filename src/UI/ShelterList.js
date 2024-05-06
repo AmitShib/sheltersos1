@@ -47,7 +47,6 @@ const ShelterList = ({ mapRef }) => {
                     shelterNum: parseInt(report.shelterNum, 10)
                 }));
                 setReports(parsedReports);
-
             } catch (error) {
                 console.error('Error fetching reports:', error);
             }
@@ -117,10 +116,12 @@ const ShelterList = ({ mapRef }) => {
     /*PROCESS AND SORT SHELTERS WHEN FEATURECOLLECTION IS AVAILABLE */
     const sortedShelters = featureCollection
         ? featureCollection.features.map((feature, index) => {
-            const shelterNumber = index + 1;
+            // const shelterNumber = index + 1;
+            const shelterNumber = feature.properties.OBJECTID;
             const coordinates = feature.geometry.coordinates;
             const distance = calculateDistance(coordinates, targetPoint);
             const report = reports.find(report => report.shelterNum === shelterNumber); 
+            // console.log("shelter reports", reports);
 
             return {
                 shelterNumber,
