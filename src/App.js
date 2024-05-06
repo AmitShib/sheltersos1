@@ -9,8 +9,7 @@ import Modal from './UI/SignIn/Modal';
 import SignInButton from './UI/SignIn/SignInButton';
 import SignInForm from './UI/SignIn/SignInForm';
 import SignUpForm from './UI/SignIn/SignUpForm';
-import axios from 'axios';
-
+import MapHelp from './UI/MapHelp';
 
 function App() {
 

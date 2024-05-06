@@ -22,8 +22,7 @@ import jerusShelters from '../GisData/jerusalem.geojson';
 import { GlobalContext } from '../GlobalContext';
 import { apiKey } from '../config';
 import './Map.css';
-import axios from 'axios';
-
+import MapHelp from '../UI/MapHelp';
 
 
 
@@ -59,7 +58,7 @@ const MapComponent = ({ mapRef }) => {
 
   const popupRef = useRef(null);
 
-  const { isAdmin, isConnected , reports} = useContext(GlobalContext);
+  const { isAdmin, isConnected, reports } = useContext(GlobalContext);
 
 
 
@@ -319,7 +318,11 @@ const MapComponent = ({ mapRef }) => {
   }, [reports, isConnected, isAdmin]);
 
   return (
-    <div id="map" ref={mapContainer}></div>
+    <div id="map" ref={mapContainer}>
+      <MapHelp />
+
+    </div>
+
   );
 };
 
