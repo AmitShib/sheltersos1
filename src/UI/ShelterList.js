@@ -133,13 +133,13 @@ const ShelterList = ({ mapRef }) => {
 
     return (
         <div className="shelter-list-container"> 
-            <h2>List of Closest Shelters</h2>
+            <h2 className="shelter-list-header">List of Closest Shelters</h2>
             <ul>
                 {sortedShelters.map((shelter, index) => (
                     <li key={index} className="shelter-item">
                         <span className="name"> Shelter Number: {shelter.shelterNumber}</span><br />
                         <span className="distance">{shelter.distance.toFixed(2)} meters away</span><br />
-                        {shelter.report && <span className="report">report: {shelter.report}</span>}<br />
+                        {shelter.report && <span className="report">Status: {shelter.report}</span>}<br />
                         <div className="button-container">
                             <button className="red-ellipse-button" onClick={() => zoomToShelter(shelter)}>Navigation</button>
                             <button className="red-ellipse-button" onClick={() => handleReportClick(shelter)}>Report</button>
